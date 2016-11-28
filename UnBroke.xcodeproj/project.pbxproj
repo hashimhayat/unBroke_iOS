@@ -312,6 +312,7 @@
 				20DBFF291DE38CA7002E0675 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

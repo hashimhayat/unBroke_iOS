@@ -13,6 +13,12 @@
 		20DBFF1E1DE38CA7002E0675 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20DBFF1C1DE38CA7002E0675 /* Main.storyboard */; };
 		20DBFF201DE38CA7002E0675 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20DBFF1F1DE38CA7002E0675 /* Assets.xcassets */; };
 		20DBFF231DE38CA7002E0675 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20DBFF211DE38CA7002E0675 /* LaunchScreen.storyboard */; };
+		20E26A3B1DEE72000026A353 /* JobsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E26A3A1DEE72000026A353 /* JobsViewController.m */; };
+		20E26A3E1DEE79EB0026A353 /* JobsFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E26A3D1DEE79EB0026A353 /* JobsFilterViewController.m */; };
+		20E26A411DEE845A0026A353 /* JobsPostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E26A401DEE845A0026A353 /* JobsPostViewController.m */; };
+		20E26A441DEE86740026A353 /* MessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E26A431DEE86740026A353 /* MessagesViewController.m */; };
+		20E26A471DEE8E740026A353 /* MessagesThreadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E26A461DEE8E740026A353 /* MessagesThreadViewController.m */; };
+		20E26A4A1DEE9EB50026A353 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E26A491DEE9EB50026A353 /* ProfileViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +32,18 @@
 		20DBFF1F1DE38CA7002E0675 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		20DBFF221DE38CA7002E0675 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		20DBFF241DE38CA7002E0675 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		20E26A391DEE72000026A353 /* JobsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobsViewController.h; sourceTree = "<group>"; };
+		20E26A3A1DEE72000026A353 /* JobsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobsViewController.m; sourceTree = "<group>"; };
+		20E26A3C1DEE79EB0026A353 /* JobsFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobsFilterViewController.h; sourceTree = "<group>"; };
+		20E26A3D1DEE79EB0026A353 /* JobsFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobsFilterViewController.m; sourceTree = "<group>"; };
+		20E26A3F1DEE845A0026A353 /* JobsPostViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobsPostViewController.h; sourceTree = "<group>"; };
+		20E26A401DEE845A0026A353 /* JobsPostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobsPostViewController.m; sourceTree = "<group>"; };
+		20E26A421DEE86740026A353 /* MessagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessagesViewController.h; sourceTree = "<group>"; };
+		20E26A431DEE86740026A353 /* MessagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessagesViewController.m; sourceTree = "<group>"; };
+		20E26A451DEE8E740026A353 /* MessagesThreadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessagesThreadViewController.h; sourceTree = "<group>"; };
+		20E26A461DEE8E740026A353 /* MessagesThreadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessagesThreadViewController.m; sourceTree = "<group>"; };
+		20E26A481DEE9EB50026A353 /* ProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileViewController.h; sourceTree = "<group>"; };
+		20E26A491DEE9EB50026A353 /* ProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,7 +80,19 @@
 				20DBFF171DE38CA7002E0675 /* AppDelegate.m */,
 				20DBFF191DE38CA7002E0675 /* ViewController.h */,
 				20DBFF1A1DE38CA7002E0675 /* ViewController.m */,
+				20E26A391DEE72000026A353 /* JobsViewController.h */,
+				20E26A3A1DEE72000026A353 /* JobsViewController.m */,
 				20DBFF1C1DE38CA7002E0675 /* Main.storyboard */,
+				20E26A481DEE9EB50026A353 /* ProfileViewController.h */,
+				20E26A491DEE9EB50026A353 /* ProfileViewController.m */,
+				20E26A3F1DEE845A0026A353 /* JobsPostViewController.h */,
+				20E26A401DEE845A0026A353 /* JobsPostViewController.m */,
+				20E26A421DEE86740026A353 /* MessagesViewController.h */,
+				20E26A431DEE86740026A353 /* MessagesViewController.m */,
+				20E26A451DEE8E740026A353 /* MessagesThreadViewController.h */,
+				20E26A461DEE8E740026A353 /* MessagesThreadViewController.m */,
+				20E26A3C1DEE79EB0026A353 /* JobsFilterViewController.h */,
+				20E26A3D1DEE79EB0026A353 /* JobsFilterViewController.m */,
 				20DBFF1F1DE38CA7002E0675 /* Assets.xcassets */,
 				20DBFF211DE38CA7002E0675 /* LaunchScreen.storyboard */,
 				20DBFF241DE38CA7002E0675 /* Info.plist */,
@@ -151,9 +181,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				20E26A471DEE8E740026A353 /* MessagesThreadViewController.m in Sources */,
+				20E26A4A1DEE9EB50026A353 /* ProfileViewController.m in Sources */,
+				20E26A3B1DEE72000026A353 /* JobsViewController.m in Sources */,
 				20DBFF1B1DE38CA7002E0675 /* ViewController.m in Sources */,
+				20E26A411DEE845A0026A353 /* JobsPostViewController.m in Sources */,
 				20DBFF181DE38CA7002E0675 /* AppDelegate.m in Sources */,
+				20E26A3E1DEE79EB0026A353 /* JobsFilterViewController.m in Sources */,
 				20DBFF151DE38CA7002E0675 /* main.m in Sources */,
+				20E26A441DEE86740026A353 /* MessagesViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

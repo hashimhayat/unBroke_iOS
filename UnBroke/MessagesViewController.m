@@ -82,7 +82,7 @@
 */
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.row == 1)
+    if(indexPath.section == 1)
         [self performSegueWithIdentifier:@"showMessageThread" sender:self];
 }
 

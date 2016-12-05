@@ -1,23 +1,21 @@
 //
-//  JobsViewController.m
+//  MyJobsViewController.m
 //  UnBroke
 //
-//  Created by Shuaib Jewon on 11/29/16.
+//  Created by Shuaib Jewon on 11/30/16.
 //  Copyright © 2016 nyu.edu. All rights reserved.
 //
-
 #import "JobEntry.h"
-#import "JobsViewController.h"
+#import "MyJobsViewController.h"
 
-@interface JobsViewController ()
+@interface MyJobsViewController ()
 
 @end
 
-@implementation JobsViewController
+@implementation MyJobsViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
 }
 
 - (void)didReceiveMemoryWarning {
@@ -42,23 +40,27 @@
     if (cell == nil)
         cell = [[JobEntry alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     
+    cell.jobTitle.text = @"French Tutor";
+    cell.salary.text = @"$25/hr";
+    cell.distance.text = @"7 miles away";
+    
     switch(indexPath.row){
-        case 2:
-            cell.jobTitle.text = @"English Tutor";
-            cell.salary.text = @"$15/hr";
-            cell.distance.text = @"2 miles away";
+        case 0:
+            cell.jobTitle.text = @"French Tutor";
+            cell.salary.text = @"$25/hr";
+            cell.distance.text = @"7 miles away";
             cell.image.image = [UIImage imageNamed:@"tutor"];
             break;
-        case 0:
+        case 1:
             cell.jobTitle.text = @"Plumber";
-            cell.salary.text = @"$30/hr";
-            cell.distance.text = @"22 miles away";
+            cell.salary.text = @"$40/hr";
+            cell.distance.text = @"2 miles away";
             cell.image.image = [UIImage imageNamed:@"plumber"];
             break;
-        case 1:
+        case 2:
             cell.jobTitle.text = @"C# Assistance";
-            cell.salary.text = @"$40/hr";
-            cell.distance.text = @"1645 miles away";
+            cell.salary.text = @"$20/hr";
+            cell.distance.text = @"16 miles away";
             cell.image.image = [UIImage imageNamed:@"coder"];
             break;
         default:
@@ -73,11 +75,12 @@
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    //if(indexPath.row == 2)
-        //[self performSegueWithIdentifier:@"showJob" sender:self];
+    if(indexPath.row == 2)
+        [self performSegueWithIdentifier:@"showJob" sender:self];
 }
 
--(IBAction)goBackToJobs:(UIStoryboardSegue *)segue {
+
+-(IBAction)goBackToMyJobs:(UIStoryboardSegue *)segue {
 }
 
 @end

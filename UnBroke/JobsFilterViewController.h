@@ -1,7 +1,7 @@
 //
 //  JobsFilterViewController.h
 //  UnBroke
-//
+///Users/Shuaib/Documents/Xcode/UnBroke/UnBroke/JobsFilterViewController.h
 //  Created by Shuaib Jewon on 11/29/16.
 //  Copyright © 2016 nyu.edu. All rights reserved.
 //
@@ -11,7 +11,7 @@
 @interface JobsFilterViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (copy,nonatomic) NSArray *identifiers;
-@property (copy,nonatomic) NSArray *defaultVal;
-
+@property (copy,nonatomic) NSMutableArray *defaultVal;
+@property (strong, nonatomic) IBOutlet UITableView *tableView;
 
 @end

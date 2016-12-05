@@ -8,9 +8,19 @@
 
 #import <UIKit/UIKit.h>
 
-@interface JobsPostViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface JobsPostViewController : UITableViewController <UIPickerViewDataSource, UIPickerViewDelegate>
 
-@property (copy,nonatomic) NSArray *identifiers;
-@property (copy,nonatomic) NSArray *defaultVal;
+@property (strong, nonatomic) IBOutlet UITableView *tableView;
+@property (strong, nonatomic) IBOutlet UITableView *jobNameTextField;
+@property (strong, nonatomic) IBOutlet UISlider *sliderMinDistance;
+@property (strong, nonatomic) IBOutlet UITextField *sliderMinDistanceField;
+@property (strong, nonatomic) IBOutlet UISlider *sliderMaxDistance;
+@property (strong, nonatomic) IBOutlet UITextField *sliderMaxDistanceField;
+@property (strong, nonatomic) IBOutlet UITextField *descriptionField;
+@property (strong, nonatomic) IBOutlet UITextView *descriptionFieldEdit;
+@property (strong, nonatomic) IBOutlet UITextField *subCategoryPickerText;
+@property (strong, nonatomic) IBOutlet UIPickerView *subCategoryPicker;
+@property (strong, nonatomic) IBOutlet UIPickerView *categoryPicker;
+@property (strong, nonatomic) IBOutlet UITextField *categoryPickerText;
 
 @end

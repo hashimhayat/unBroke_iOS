@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		207327E21DF4EE21006B6A47 /* JobEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 207327E11DF4EE21006B6A47 /* JobEntry.m */; };
 		20DBFF151DE38CA7002E0675 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 20DBFF141DE38CA7002E0675 /* main.m */; };
 		20DBFF181DE38CA7002E0675 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 20DBFF171DE38CA7002E0675 /* AppDelegate.m */; };
 		20DBFF1B1DE38CA7002E0675 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20DBFF1A1DE38CA7002E0675 /* ViewController.m */; };
@@ -19,9 +20,12 @@
 		20E26A441DEE86740026A353 /* MessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E26A431DEE86740026A353 /* MessagesViewController.m */; };
 		20E26A471DEE8E740026A353 /* MessagesThreadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E26A461DEE8E740026A353 /* MessagesThreadViewController.m */; };
 		20E26A4A1DEE9EB50026A353 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E26A491DEE9EB50026A353 /* ProfileViewController.m */; };
+		20E26A511DEF8BBB0026A353 /* MyJobsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E26A501DEF8BBB0026A353 /* MyJobsViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		207327E01DF4EE21006B6A47 /* JobEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobEntry.h; sourceTree = "<group>"; };
+		207327E11DF4EE21006B6A47 /* JobEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobEntry.m; sourceTree = "<group>"; };
 		20DBFF101DE38CA7002E0675 /* UnBroke.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnBroke.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		20DBFF141DE38CA7002E0675 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		20DBFF161DE38CA7002E0675 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -44,6 +48,8 @@
 		20E26A461DEE8E740026A353 /* MessagesThreadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessagesThreadViewController.m; sourceTree = "<group>"; };
 		20E26A481DEE9EB50026A353 /* ProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileViewController.h; sourceTree = "<group>"; };
 		20E26A491DEE9EB50026A353 /* ProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
+		20E26A4F1DEF8BBB0026A353 /* MyJobsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyJobsViewController.h; sourceTree = "<group>"; };
+		20E26A501DEF8BBB0026A353 /* MyJobsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyJobsViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,20 +86,14 @@
 				20DBFF171DE38CA7002E0675 /* AppDelegate.m */,
 				20DBFF191DE38CA7002E0675 /* ViewController.h */,
 				20DBFF1A1DE38CA7002E0675 /* ViewController.m */,
-				20E26A391DEE72000026A353 /* JobsViewController.h */,
-				20E26A3A1DEE72000026A353 /* JobsViewController.m */,
+				20E26A4E1DEF8B870026A353 /* Job (Search) */,
 				20DBFF1C1DE38CA7002E0675 /* Main.storyboard */,
-				20E26A481DEE9EB50026A353 /* ProfileViewController.h */,
-				20E26A491DEE9EB50026A353 /* ProfileViewController.m */,
-				20E26A3F1DEE845A0026A353 /* JobsPostViewController.h */,
-				20E26A401DEE845A0026A353 /* JobsPostViewController.m */,
-				20E26A421DEE86740026A353 /* MessagesViewController.h */,
-				20E26A431DEE86740026A353 /* MessagesViewController.m */,
-				20E26A451DEE8E740026A353 /* MessagesThreadViewController.h */,
-				20E26A461DEE8E740026A353 /* MessagesThreadViewController.m */,
-				20E26A3C1DEE79EB0026A353 /* JobsFilterViewController.h */,
-				20E26A3D1DEE79EB0026A353 /* JobsFilterViewController.m */,
+				20E26A521DEF8BC20026A353 /* My Jobs */,
+				20E26A4B1DEF8B370026A353 /* Profile View */,
+				20E26A4C1DEF8B5D0026A353 /* Messages */,
 				20DBFF1F1DE38CA7002E0675 /* Assets.xcassets */,
+				207327E01DF4EE21006B6A47 /* JobEntry.h */,
+				207327E11DF4EE21006B6A47 /* JobEntry.m */,
 				20DBFF211DE38CA7002E0675 /* LaunchScreen.storyboard */,
 				20DBFF241DE38CA7002E0675 /* Info.plist */,
 				20DBFF131DE38CA7002E0675 /* Supporting Files */,
@@ -107,6 +107,48 @@
 				20DBFF141DE38CA7002E0675 /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		20E26A4B1DEF8B370026A353 /* Profile View */ = {
+			isa = PBXGroup;
+			children = (
+				20E26A481DEE9EB50026A353 /* ProfileViewController.h */,
+				20E26A491DEE9EB50026A353 /* ProfileViewController.m */,
+			);
+			name = "Profile View";
+			sourceTree = "<group>";
+		};
+		20E26A4C1DEF8B5D0026A353 /* Messages */ = {
+			isa = PBXGroup;
+			children = (
+				20E26A421DEE86740026A353 /* MessagesViewController.h */,
+				20E26A431DEE86740026A353 /* MessagesViewController.m */,
+				20E26A451DEE8E740026A353 /* MessagesThreadViewController.h */,
+				20E26A461DEE8E740026A353 /* MessagesThreadViewController.m */,
+			);
+			name = Messages;
+			sourceTree = "<group>";
+		};
+		20E26A4E1DEF8B870026A353 /* Job (Search) */ = {
+			isa = PBXGroup;
+			children = (
+				20E26A391DEE72000026A353 /* JobsViewController.h */,
+				20E26A3A1DEE72000026A353 /* JobsViewController.m */,
+				20E26A3C1DEE79EB0026A353 /* JobsFilterViewController.h */,
+				20E26A3D1DEE79EB0026A353 /* JobsFilterViewController.m */,
+			);
+			name = "Job (Search)";
+			sourceTree = "<group>";
+		};
+		20E26A521DEF8BC20026A353 /* My Jobs */ = {
+			isa = PBXGroup;
+			children = (
+				20E26A4F1DEF8BBB0026A353 /* MyJobsViewController.h */,
+				20E26A501DEF8BBB0026A353 /* MyJobsViewController.m */,
+				20E26A3F1DEE845A0026A353 /* JobsPostViewController.h */,
+				20E26A401DEE845A0026A353 /* JobsPostViewController.m */,
+			);
+			name = "My Jobs";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -189,6 +231,8 @@
 				20DBFF181DE38CA7002E0675 /* AppDelegate.m in Sources */,
 				20E26A3E1DEE79EB0026A353 /* JobsFilterViewController.m in Sources */,
 				20DBFF151DE38CA7002E0675 /* main.m in Sources */,
+				20E26A511DEF8BBB0026A353 /* MyJobsViewController.m in Sources */,
+				207327E21DF4EE21006B6A47 /* JobEntry.m in Sources */,
 				20E26A441DEE86740026A353 /* MessagesViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

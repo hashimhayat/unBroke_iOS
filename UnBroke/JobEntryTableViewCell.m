@@ -1,14 +1,14 @@
 //
-//  JobEntry.m
+//  JobEntryTableViewCell.m
 //  UnBroke
 //
-//  Created by Shuaib Jewon on 12/4/16.
+//  Created by Shuaib Jewon on 12/5/16.
 //  Copyright © 2016 nyu.edu. All rights reserved.
 //
 
-#import "JobEntry.h"
+#import "JobEntryTableViewCell.h"
 
-@implementation JobEntry
+@implementation JobEntryTableViewCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];

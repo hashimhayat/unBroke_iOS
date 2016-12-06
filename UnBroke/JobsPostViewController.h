@@ -26,4 +26,6 @@
 @property (strong, nonatomic) IBOutlet UIPickerView *salaryTypePicker;
 @property (strong, nonatomic) IBOutlet UITextField *salaryText;
 
+@property (strong, nonatomic) UITextField *activeField;
+
 @end

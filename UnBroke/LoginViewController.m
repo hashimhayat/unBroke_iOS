@@ -104,7 +104,7 @@
     
     //check for login stuff here
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^ {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^ {
         [spinner stopAnimating];
         [UIView animateWithDuration:0.5
                          animations:^{overlay.alpha = 0.0;}
@@ -149,7 +149,7 @@
     
     //check for login stuff here
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^ {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^ {
         [spinner stopAnimating];
         [UIView animateWithDuration:0.5
                          animations:^{overlay.alpha = 0.0;}

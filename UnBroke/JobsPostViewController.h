@@ -22,5 +22,8 @@
 @property (strong, nonatomic) IBOutlet UIPickerView *subCategoryPicker;
 @property (strong, nonatomic) IBOutlet UIPickerView *categoryPicker;
 @property (strong, nonatomic) IBOutlet UITextField *categoryPickerText;
+@property (strong, nonatomic) IBOutlet UITextField *salaryTypeText;
+@property (strong, nonatomic) IBOutlet UIPickerView *salaryTypePicker;
+@property (strong, nonatomic) IBOutlet UITextField *salaryText;
 
 @end

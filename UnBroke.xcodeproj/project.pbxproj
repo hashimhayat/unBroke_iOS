@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		207327E21DF4EE21006B6A47 /* JobEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 207327E11DF4EE21006B6A47 /* JobEntry.m */; };
+		207327E81DF5425B006B6A47 /* ThreadEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 207327E71DF5425B006B6A47 /* ThreadEntry.m */; };
+		207327EB1DF5476B006B6A47 /* ReceiverEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 207327EA1DF5476B006B6A47 /* ReceiverEntry.m */; };
+		207327EE1DF54777006B6A47 /* SenderEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 207327ED1DF54777006B6A47 /* SenderEntry.m */; };
+		207327F11DF558A0006B6A47 /* TypicalTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 207327F01DF558A0006B6A47 /* TypicalTableViewCell.m */; };
+		207327F41DF558E2006B6A47 /* profilePictureCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 207327F31DF558E2006B6A47 /* profilePictureCell.m */; };
 		20DBFF151DE38CA7002E0675 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 20DBFF141DE38CA7002E0675 /* main.m */; };
 		20DBFF181DE38CA7002E0675 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 20DBFF171DE38CA7002E0675 /* AppDelegate.m */; };
 		20DBFF1B1DE38CA7002E0675 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20DBFF1A1DE38CA7002E0675 /* ViewController.m */; };
@@ -21,11 +26,23 @@
 		20E26A471DEE8E740026A353 /* MessagesThreadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E26A461DEE8E740026A353 /* MessagesThreadViewController.m */; };
 		20E26A4A1DEE9EB50026A353 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E26A491DEE9EB50026A353 /* ProfileViewController.m */; };
 		20E26A511DEF8BBB0026A353 /* MyJobsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E26A501DEF8BBB0026A353 /* MyJobsViewController.m */; };
+		20E3B9A01DF63A7400F7DBD0 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E3B99F1DF63A7400F7DBD0 /* LoginViewController.m */; };
+		20E3B9A31DF63A8300F7DBD0 /* RegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E3B9A21DF63A8300F7DBD0 /* RegisterViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		207327E01DF4EE21006B6A47 /* JobEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobEntry.h; sourceTree = "<group>"; };
 		207327E11DF4EE21006B6A47 /* JobEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobEntry.m; sourceTree = "<group>"; };
+		207327E61DF5425B006B6A47 /* ThreadEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadEntry.h; sourceTree = "<group>"; };
+		207327E71DF5425B006B6A47 /* ThreadEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThreadEntry.m; sourceTree = "<group>"; };
+		207327E91DF5476B006B6A47 /* ReceiverEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReceiverEntry.h; sourceTree = "<group>"; };
+		207327EA1DF5476B006B6A47 /* ReceiverEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReceiverEntry.m; sourceTree = "<group>"; };
+		207327EC1DF54777006B6A47 /* SenderEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SenderEntry.h; sourceTree = "<group>"; };
+		207327ED1DF54777006B6A47 /* SenderEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SenderEntry.m; sourceTree = "<group>"; };
+		207327EF1DF558A0006B6A47 /* TypicalTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TypicalTableViewCell.h; sourceTree = "<group>"; };
+		207327F01DF558A0006B6A47 /* TypicalTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TypicalTableViewCell.m; sourceTree = "<group>"; };
+		207327F21DF558E2006B6A47 /* profilePictureCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = profilePictureCell.h; sourceTree = "<group>"; };
+		207327F31DF558E2006B6A47 /* profilePictureCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = profilePictureCell.m; sourceTree = "<group>"; };
 		20DBFF101DE38CA7002E0675 /* UnBroke.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnBroke.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		20DBFF141DE38CA7002E0675 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		20DBFF161DE38CA7002E0675 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -50,6 +67,10 @@
 		20E26A491DEE9EB50026A353 /* ProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
 		20E26A4F1DEF8BBB0026A353 /* MyJobsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyJobsViewController.h; sourceTree = "<group>"; };
 		20E26A501DEF8BBB0026A353 /* MyJobsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyJobsViewController.m; sourceTree = "<group>"; };
+		20E3B99E1DF63A7400F7DBD0 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		20E3B99F1DF63A7400F7DBD0 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		20E3B9A11DF63A8300F7DBD0 /* RegisterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegisterViewController.h; sourceTree = "<group>"; };
+		20E3B9A21DF63A8300F7DBD0 /* RegisterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegisterViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +103,7 @@
 		20DBFF121DE38CA7002E0675 /* UnBroke */ = {
 			isa = PBXGroup;
 			children = (
+				20E3B99D1DF63A2900F7DBD0 /* Authentication */,
 				20DBFF161DE38CA7002E0675 /* AppDelegate.h */,
 				20DBFF171DE38CA7002E0675 /* AppDelegate.m */,
 				20DBFF191DE38CA7002E0675 /* ViewController.h */,
@@ -92,6 +114,8 @@
 				20E26A4B1DEF8B370026A353 /* Profile View */,
 				20E26A4C1DEF8B5D0026A353 /* Messages */,
 				20DBFF1F1DE38CA7002E0675 /* Assets.xcassets */,
+				207327EF1DF558A0006B6A47 /* TypicalTableViewCell.h */,
+				207327F01DF558A0006B6A47 /* TypicalTableViewCell.m */,
 				207327E01DF4EE21006B6A47 /* JobEntry.h */,
 				207327E11DF4EE21006B6A47 /* JobEntry.m */,
 				20DBFF211DE38CA7002E0675 /* LaunchScreen.storyboard */,
@@ -112,6 +136,8 @@
 		20E26A4B1DEF8B370026A353 /* Profile View */ = {
 			isa = PBXGroup;
 			children = (
+				207327F21DF558E2006B6A47 /* profilePictureCell.h */,
+				207327F31DF558E2006B6A47 /* profilePictureCell.m */,
 				20E26A481DEE9EB50026A353 /* ProfileViewController.h */,
 				20E26A491DEE9EB50026A353 /* ProfileViewController.m */,
 			);
@@ -122,9 +148,15 @@
 			isa = PBXGroup;
 			children = (
 				20E26A421DEE86740026A353 /* MessagesViewController.h */,
+				207327E61DF5425B006B6A47 /* ThreadEntry.h */,
+				207327E71DF5425B006B6A47 /* ThreadEntry.m */,
 				20E26A431DEE86740026A353 /* MessagesViewController.m */,
 				20E26A451DEE8E740026A353 /* MessagesThreadViewController.h */,
 				20E26A461DEE8E740026A353 /* MessagesThreadViewController.m */,
+				207327E91DF5476B006B6A47 /* ReceiverEntry.h */,
+				207327EA1DF5476B006B6A47 /* ReceiverEntry.m */,
+				207327EC1DF54777006B6A47 /* SenderEntry.h */,
+				207327ED1DF54777006B6A47 /* SenderEntry.m */,
 			);
 			name = Messages;
 			sourceTree = "<group>";
@@ -149,6 +181,17 @@
 				20E26A401DEE845A0026A353 /* JobsPostViewController.m */,
 			);
 			name = "My Jobs";
+			sourceTree = "<group>";
+		};
+		20E3B99D1DF63A2900F7DBD0 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				20E3B99E1DF63A7400F7DBD0 /* LoginViewController.h */,
+				20E3B99F1DF63A7400F7DBD0 /* LoginViewController.m */,
+				20E3B9A11DF63A8300F7DBD0 /* RegisterViewController.h */,
+				20E3B9A21DF63A8300F7DBD0 /* RegisterViewController.m */,
+			);
+			name = Authentication;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -224,16 +267,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				20E26A471DEE8E740026A353 /* MessagesThreadViewController.m in Sources */,
+				207327EE1DF54777006B6A47 /* SenderEntry.m in Sources */,
 				20E26A4A1DEE9EB50026A353 /* ProfileViewController.m in Sources */,
 				20E26A3B1DEE72000026A353 /* JobsViewController.m in Sources */,
 				20DBFF1B1DE38CA7002E0675 /* ViewController.m in Sources */,
 				20E26A411DEE845A0026A353 /* JobsPostViewController.m in Sources */,
 				20DBFF181DE38CA7002E0675 /* AppDelegate.m in Sources */,
+				20E3B9A01DF63A7400F7DBD0 /* LoginViewController.m in Sources */,
 				20E26A3E1DEE79EB0026A353 /* JobsFilterViewController.m in Sources */,
 				20DBFF151DE38CA7002E0675 /* main.m in Sources */,
+				207327F11DF558A0006B6A47 /* TypicalTableViewCell.m in Sources */,
 				20E26A511DEF8BBB0026A353 /* MyJobsViewController.m in Sources */,
 				207327E21DF4EE21006B6A47 /* JobEntry.m in Sources */,
+				20E3B9A31DF63A8300F7DBD0 /* RegisterViewController.m in Sources */,
+				207327F41DF558E2006B6A47 /* profilePictureCell.m in Sources */,
+				207327E81DF5425B006B6A47 /* ThreadEntry.m in Sources */,
 				20E26A441DEE86740026A353 /* MessagesViewController.m in Sources */,
+				207327EB1DF5476B006B6A47 /* ReceiverEntry.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

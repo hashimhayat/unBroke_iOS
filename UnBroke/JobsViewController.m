@@ -73,8 +73,8 @@
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    //if(indexPath.row == 2)
-        //[self performSegueWithIdentifier:@"showJob" sender:self];
+    if(indexPath.row == 2)
+        [self performSegueWithIdentifier:@"showJob" sender:self];
 }
 
 -(IBAction)goBackToJobs:(UIStoryboardSegue *)segue {

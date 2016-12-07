@@ -14,16 +14,31 @@
 
 @end
 
+NSString *apiUrl = @"http://i6.cims.nyu.edu/~hh1316/unbroke_api";
+NSInteger userID = -1;
+
 @implementation LoginViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self registerForKeyboardNotifications];
+    _emailTextField.text = @"daheem";
+    _pwdTextField.text = @"1234";
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (IBAction)logInBtnClick:(id)sender {
+    //add validation here
+
+    [self authWithUser:_emailTextField.text authWithPwd:_pwdTextField.text];
+}
+
+- (IBAction)connectFbBtnClick:(id)sender {
+    
 }
 
 //configures return button on keyboard
@@ -86,7 +101,7 @@
     _scrollView.scrollIndicatorInsets = contentInsets;
 }
 
-- (IBAction)logInBtnClick:(id)sender {
+-(void)authWithUser:(NSString *)username authWithPwd:(NSString *)password{
     //create overlay
     UIView *overlay = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     [overlay setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.3]];
@@ -102,61 +117,66 @@
     [self.view addSubview:overlay];
     [spinner startAnimating];
     
-    //check for login stuff here
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^ {
-        [spinner stopAnimating];
-        [UIView animateWithDuration:0.5
-                         animations:^{overlay.alpha = 0.0;}
-                         completion:^(BOOL finished){ [overlay removeFromSuperview]; }];
-        
-        //if fail
-        UIAlertController * alert=   [UIAlertController
-                                      alertControllerWithTitle:nil
-                                      message:@"Wrong username/password combination"
-                                      preferredStyle:UIAlertControllerStyleAlert];
-        
-        UIAlertAction* ok = [UIAlertAction
-                             actionWithTitle:@"OK"
-                             style:UIAlertActionStyleDefault
-                             handler:^(UIAlertAction * action)
-                             {
-                                 [alert dismissViewControllerAnimated:YES completion:nil];
-                                 
-                             }];
-        
-        [alert addAction:ok];
-        
-        [self presentViewController:alert animated:YES completion:nil];
-    });
-}
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^ {
+        //adapted from http://codewithchris.com/tutorial-how-to-use-ios-nsurlconnection-by-example/
+        NSString *post = [NSString stringWithFormat:@"username=%@&password=%@",username, password];
+        NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+        NSString *postLength = [NSString stringWithFormat:@"%lu" , (unsigned long)[postData length]];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/login.php", apiUrl]];
+        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+        [request setURL:url];
+        [request setHTTPMethod:@"POST"];
+        [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        [request setHTTPBody:postData];
+        [request setTimeoutInterval:10.0];
+        NSURLSession *session = [NSURLSession sharedSession];
 
-- (IBAction)connectFbBtnClick:(id)sender {
-    //create overlay
-    UIView *overlay = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    [overlay setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.3]];
-    
-    //create spinner and set its position to center
-    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    spinner.center = CGPointMake(self.view.frame.size.width / 2.0, self.view.frame.size.height / 2.0);
-    
-    //add spinner to overlay and add overlay to view + start animating
-    [UIView animateWithDuration:0.5
-                     animations:^{overlay.alpha = 1.0;}
-                     completion:^(BOOL finished){ [overlay addSubview:spinner]; }];
-    [self.view addSubview:overlay];
-    [spinner startAnimating];
-    
-    //check for login stuff here
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^ {
-        [spinner stopAnimating];
-        [UIView animateWithDuration:0.5
-                         animations:^{overlay.alpha = 0.0;}
-                         completion:^(BOOL finished){ [overlay removeFromSuperview]; }];
-        
-        //if success
-        [self performSegueWithIdentifier:@"loggedIn" sender:self];
+        [[session dataTaskWithRequest:request
+                    completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                        if(!error){
+                            NSError *JSONerror = nil;
+                            id object = [NSJSONSerialization JSONObjectWithData:data
+                                                                        options:0
+                                                                          error:&JSONerror];
+                            
+                            if(!JSONerror){
+                                
+                                NSDictionary *results = [object objectAtIndex:0];
+                                userID = [[results valueForKey:@"user_id"] integerValue];
+                                
+                                if(userID == -1){
+                                    //failure
+                                    UIAlertController * alert=   [UIAlertController
+                                                                  alertControllerWithTitle:nil
+                                                                  message:@"Invalid Credidentials"
+                                                                  preferredStyle:UIAlertControllerStyleAlert];
+                                    
+                                    UIAlertAction* ok = [UIAlertAction
+                                                         actionWithTitle:@"OK"
+                                                         style:UIAlertActionStyleDefault
+                                                         handler:^(UIAlertAction * action)
+                                                         {
+                                                             [alert dismissViewControllerAnimated:YES completion:nil];
+                                                         }];
+                                    
+                                    [alert addAction:ok];
+                                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                                        [spinner stopAnimating];
+                                        [overlay removeFromSuperview];
+                                        [self presentViewController:alert animated:YES completion:nil];
+                                    }];
+                                } else {
+                                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                                        [spinner stopAnimating];
+                                        [overlay removeFromSuperview];
+                                        [self performSegueWithIdentifier:@"loggedIn" sender:self];
+                                    }];
+                                }
+                            }
+                        }
+                    }]
+         resume];
     });
 }
 

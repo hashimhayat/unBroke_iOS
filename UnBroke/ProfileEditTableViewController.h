@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ProfileEditTableViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate>
+@interface ProfileEditTableViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (copy,nonatomic) NSArray *identifiers;
 @property (copy,nonatomic) NSArray *defaultVal;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *saveBtn;
+@property (strong, nonatomic) UIImagePickerController *picker;
 
 @end

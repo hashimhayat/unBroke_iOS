@@ -1,16 +1,17 @@
 //
-//  MyJobsViewController.h
+//  JobsSingleViewController.h
 //  UnBroke
 //
-//  Created by Shuaib Jewon on 11/30/16.
+//  Created by Shuaib Jewon on 12/10/16.
 //  Copyright © 2016 nyu.edu. All rights reserved.
 //
+
 #import <UIKit/UIKit.h>
 
-@interface MyJobsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface JobsSingleViewController : UIViewController
 
 @property (strong, nonatomic) UITextField *activeField;
+@property (strong,nonatomic) NSMutableArray *jobData;
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
-@property NSMutableArray *data;
 
 @end

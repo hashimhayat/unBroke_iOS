@@ -1,22 +1,22 @@
 //
-//  SenderEntry.m
+//  titleTableViewCell.m
 //  UnBroke
 //
-//  Created by Shuaib Jewon on 12/5/16.
+//  Created by Shuaib Jewon on 12/7/16.
 //  Copyright © 2016 nyu.edu. All rights reserved.
 //
 
-#import "SenderEntry.h"
+#import "titleTableViewCell.h"
 
-extern NSInteger cornerRadius;
 
-@implementation SenderEntry
+@implementation titleTableViewCell
+
+@synthesize imageView = _imageView;
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    _image.layer.cornerRadius = cornerRadius;
-    _image.clipsToBounds = YES;
-    // Initialization code
+    _imageView.layer.cornerRadius = 5;
+    _imageView.clipsToBounds = YES;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

@@ -5,10 +5,10 @@
 //  Created by Shuaib Jewon on 12/5/16.
 //  Copyright © 2016 nyu.edu. All rights reserved.
 //
-//  Line 29-42 adapted from http://stackoverflow.com/questions/1347779/how-to-navigate-through-textfields-next-done-buttons
-//  Line 44-87 adapted from https://developer.apple.com/library/content/documentation/StringsTextFonts/Conceptual/TextAndWebiPhoneOS/KeyboardManagement/KeyboardManagement.html
 
 #import "LoginViewController.h"
+
+typedef void (^ IteratorBlock)(id object);
 
 @interface LoginViewController ()
 
@@ -16,30 +16,179 @@
 
 NSString *apiUrl = @"http://i6.cims.nyu.edu/~hh1316/unbroke_api";
 NSInteger userID = -1;
+NSInteger cornerRadius = 7;
 
 @implementation LoginViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self registerForKeyboardNotifications];
-    _emailTextField.text = @"daheem";
-    _pwdTextField.text = @"1234";
+    
+    _emailTextField.layer.cornerRadius = cornerRadius;
+    _pwdTextField.layer.cornerRadius = cornerRadius;
+    _loginBtn.layer.cornerRadius = cornerRadius;
+    _signUpBtn.layer.cornerRadius = cornerRadius;
+    _fbConnectBtn.layer.cornerRadius = cornerRadius;
+    
+    //TODO automatic sign stuff
+    _emailTextField.text = @"shujew95";
+    _pwdTextField.text = @"test";
+    [self authWithUser:_emailTextField.text authWithPwd:_pwdTextField.text];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (IBAction)logInBtnClick:(id)sender {
-    //add validation here
-
-    [self authWithUser:_emailTextField.text authWithPwd:_pwdTextField.text];
+    //TODO add auto sign in part
+    
+    if(_emailTextField.text.length < 1 || _pwdTextField.text.length < 1)
+        [self showAlertWithMessage:@"Please fill in both username and password fields"];
+    else
+        [self authWithUser:_emailTextField.text authWithPwd:_pwdTextField.text];
 }
 
 - (IBAction)connectFbBtnClick:(id)sender {
     
 }
+
+-(void)authWithUser:(NSString *)username authWithPwd:(NSString *)password{
+    NSString *postString = [NSString stringWithFormat:@"username=%@&password=%@",username, password];
+    [self sendPostRequestWithData:postString sendPostRequestTo:@"login.php" postCustomCommand:^(id object){
+        NSDictionary *results = [object objectAtIndex:0];
+        userID = [[results valueForKey:@"user_id"] integerValue];
+        
+        if(userID == -1){
+            //failure
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                [self showAlertWithMessage:@"Invalid Credidentials"];
+            }];
+        } else {
+            //login success
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                [self performSegueWithIdentifier:@"loggedIn" sender:self];
+            }];
+        }
+    }];
+}
+
+-(IBAction)goBackToLogin:(UIStoryboardSegue *)segue {
+    userID = -1;
+    [self.parentViewController.navigationController popToRootViewControllerAnimated:YES];
+}
+
+/*
+ *
+ * Custom helpers
+ *
+ */
+
+//Animates and shows a custom alert message
+-(void) showAlertWithMessage:(NSString *)msg {
+    UIAlertController * alert=   [UIAlertController
+                                  alertControllerWithTitle:nil
+                                  message: msg
+                                  preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction* ok = [UIAlertAction
+                         actionWithTitle:@"OK"
+                         style:UIAlertActionStyleDefault
+                         handler:^(UIAlertAction * action)
+                         {
+                             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                                 [alert dismissViewControllerAnimated:YES completion:nil];
+                             }];
+                         }];
+    
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        [alert addAction:ok];
+        [self presentViewController:alert animated:YES completion:nil];
+    }];
+}
+
+//Animates and sends a post request with the options of setting a block of stuff to do after response received
+-(void) sendPostRequestWithData:(NSString *)postString sendPostRequestTo:(NSString *)fileName postCustomCommand:(IteratorBlock)iteratorBlock{
+    //create translucent overlay
+    UIView *overlay = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    [overlay setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.3]];
+    
+    //create a moving spinner and add it to the overlay
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    [spinner startAnimating];
+    [overlay addSubview:spinner];
+    
+    //position spinner in the center of the overlay and animate the appearance of the overlay
+    spinner.center = CGPointMake(self.view.frame.size.width / 2.0, self.view.frame.size.height / 2.0);
+    
+    //add spinner to overlay
+    [UIView animateWithDuration:0.5
+                     animations:^{
+                         [self.view addSubview:overlay];
+                         overlay.alpha = 1.0;
+                     }
+     ];
+    
+    //wait for 0.3 seconds before sending post request for aesthetic reasons - overlay and spinner shown for > 0.3 seconds
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^ {
+        //send a post request
+        //code adapted from http://codewithchris.com/tutorial-how-to-use-ios-nsurlconnection-by-example/
+        
+        //create and format post request to be send to api server
+        NSData *postData = [postString dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+        NSString *postLength = [NSString stringWithFormat:@"%lu" , (unsigned long)[postData length]];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", apiUrl, fileName]];
+        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+        [request setURL:url];
+        [request setHTTPMethod:@"POST"];
+        [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        [request setHTTPBody:postData];
+        [request setTimeoutInterval:5.0];
+        
+        //Send Post Request
+        NSURLSession *session = [NSURLSession sharedSession];
+        [[session dataTaskWithRequest:request
+                    completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                        
+                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                            [spinner stopAnimating];
+                            [overlay removeFromSuperview];
+                        }];
+                        
+                        if(error){
+                            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                                [self showAlertWithMessage:@"Server Error"];
+                            }];
+                            return;
+                        }
+                        
+                        NSError *JSONerror = nil;
+                        id object = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+                        
+                        if(JSONerror){
+                            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                                [self showAlertWithMessage:@"Server Error"];
+                            }];
+                            return;
+                        }
+                        
+                        //run custom commands through block on post results
+                        iteratorBlock(object);
+                    }]
+         resume];
+    });
+}
+
+
+/*
+ *
+ * Keyboard helper functions
+ * Changes size of view depending on location of keyboard and allows one to switch fields
+ * Credits: https://developer.apple.com/library/content/documentation/StringsTextFonts/Conceptual/TextAndWebiPhoneOS/KeyboardManagement/KeyboardManagement.html
+ * Credits: http://stackoverflow.com/questions/1347779/how-to-navigate-through-textfields-next-done-buttons
+ *
+ */
 
 //configures return button on keyboard
 -(BOOL)textFieldShouldReturn:(UITextField*)textField{
@@ -100,98 +249,5 @@ NSInteger userID = -1;
     _scrollView.contentInset = contentInsets;
     _scrollView.scrollIndicatorInsets = contentInsets;
 }
-
--(void)authWithUser:(NSString *)username authWithPwd:(NSString *)password{
-    //create overlay
-    UIView *overlay = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    [overlay setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.3]];
-    
-    //create spinner and set its position to center
-    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    spinner.center = CGPointMake(self.view.frame.size.width / 2.0, self.view.frame.size.height / 2.0);
-    
-    //add spinner to overlay and add overlay to view + start animating
-    [UIView animateWithDuration:0.5
-                     animations:^{overlay.alpha = 1.0;}
-                     completion:^(BOOL finished){ [overlay addSubview:spinner]; }];
-    [self.view addSubview:overlay];
-    [spinner startAnimating];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^ {
-        //adapted from http://codewithchris.com/tutorial-how-to-use-ios-nsurlconnection-by-example/
-        NSString *post = [NSString stringWithFormat:@"username=%@&password=%@",username, password];
-        NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
-        NSString *postLength = [NSString stringWithFormat:@"%lu" , (unsigned long)[postData length]];
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/login.php", apiUrl]];
-        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-        [request setURL:url];
-        [request setHTTPMethod:@"POST"];
-        [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-        [request setHTTPBody:postData];
-        [request setTimeoutInterval:10.0];
-        NSURLSession *session = [NSURLSession sharedSession];
-
-        [[session dataTaskWithRequest:request
-                    completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                        if(!error){
-                            NSError *JSONerror = nil;
-                            id object = [NSJSONSerialization JSONObjectWithData:data
-                                                                        options:0
-                                                                          error:&JSONerror];
-                            
-                            if(!JSONerror){
-                                
-                                NSDictionary *results = [object objectAtIndex:0];
-                                userID = [[results valueForKey:@"user_id"] integerValue];
-                                
-                                if(userID == -1){
-                                    //failure
-                                    UIAlertController * alert=   [UIAlertController
-                                                                  alertControllerWithTitle:nil
-                                                                  message:@"Invalid Credidentials"
-                                                                  preferredStyle:UIAlertControllerStyleAlert];
-                                    
-                                    UIAlertAction* ok = [UIAlertAction
-                                                         actionWithTitle:@"OK"
-                                                         style:UIAlertActionStyleDefault
-                                                         handler:^(UIAlertAction * action)
-                                                         {
-                                                             [alert dismissViewControllerAnimated:YES completion:nil];
-                                                         }];
-                                    
-                                    [alert addAction:ok];
-                                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                                        [spinner stopAnimating];
-                                        [overlay removeFromSuperview];
-                                        [self presentViewController:alert animated:YES completion:nil];
-                                    }];
-                                } else {
-                                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                                        [spinner stopAnimating];
-                                        [overlay removeFromSuperview];
-                                        [self performSegueWithIdentifier:@"loggedIn" sender:self];
-                                    }];
-                                }
-                            }
-                        }
-                    }]
-         resume];
-    });
-}
-
--(IBAction)goBackToLogin:(UIStoryboardSegue *)segue {
-
-}
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

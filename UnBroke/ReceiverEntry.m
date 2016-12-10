@@ -8,11 +8,14 @@
 
 #import "ReceiverEntry.h"
 
+extern NSInteger cornerRadius;
+
 @implementation ReceiverEntry
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    // Initialization code
+    _image.layer.cornerRadius = cornerRadius;
+    _image.clipsToBounds = YES;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

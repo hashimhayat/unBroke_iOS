@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ProfileViewController :UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface ProfileViewController :UIViewController <UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (copy,nonatomic) NSArray *identifiers;
 @property (copy,nonatomic) NSArray *defaultVal;

@@ -1,43 +1,42 @@
 //
-//  JobsViewController.m
+//  JobsSingleViewController.m
 //  UnBroke
 //
-//  Created by Shuaib Jewon on 11/29/16.
+//  Created by Shuaib Jewon on 12/10/16.
 //  Copyright © 2016 nyu.edu. All rights reserved.
 //
 
-#import "JobsViewController.h"
+#import "JobsSingleViewController.h"
 #import "JobEntryTableViewCell.h"
+#import "JobDetailsTableViewCell.h"
+
 
 typedef void (^ IteratorBlock)(id object);
 
-@interface JobsViewController ()
+@interface JobsSingleViewController ()
 
 @end
 
-@implementation JobsViewController
+@implementation JobsSingleViewController
 
 @synthesize tableView = _tableView;
 
 extern NSInteger userID;
 extern NSString *apiUrl;
-NSString *jobID;
+extern NSString *jobID;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    _jobData = [[NSMutableArray alloc] init];
     
-    [self sendPostRequestWithData:[NSString stringWithFormat:@"user_id=%ld",userID] sendPostRequestTo:@"get_all_jobs.php" postCustomCommand:^(id object){
+    [self sendPostRequestWithData:[NSString stringWithFormat:@"offer_id=12"] sendPostRequestTo:@"job_detail_by_id.php" postCustomCommand:^(id object){
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            _data = [[NSMutableArray alloc] init];
-            
-            for (id o in object){
-                NSDictionary *entry = o;
-               if(entry != nil){
-                    [_data addObject:entry];
-                }
+            NSDictionary *entry = [[object objectAtIndex:0] objectAtIndex:0];
+            if(entry != nil){
+                [_jobData addObject:entry];
             }
-
             [_tableView beginUpdates];
+            [_tableView reloadData];
             [_tableView endUpdates];
         }];
     }];
@@ -45,6 +44,7 @@ NSString *jobID;
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
 }
 
 /*
@@ -54,48 +54,66 @@ NSString *jobID;
  */
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 100;
+    return 3;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if(_data == nil)
-        return 0.0f;
-    
-    if(indexPath.row > _data.count-1)
-        return 0.0f;
+    if (indexPath.row == 2)
+        return 44.0f;
     
     return 100.0f;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    NSString *cellIdentifier = @"jobEntry";
-    JobEntryTableViewCell *cell = (JobEntryTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    
-    if (cell == nil)
-        cell = [[JobEntryTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-    
-    if(_data != nil){
-        if(indexPath.row > _data.count-1)
-            return cell;
+    if (indexPath.row == 0){
+        NSString *cellIdentifier = @"jobEntry";
+        JobEntryTableViewCell *cell = (JobEntryTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
         
-        NSDictionary *entry = [_data objectAtIndex:indexPath.row];
+        if (cell == nil)
+            cell = [[JobEntryTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
         
-        cell.jobTitle.text = [NSString stringWithFormat:@"%@",[entry objectForKey:@"title"]];
-        cell.salary.text = [NSString stringWithFormat:@"%@",[entry objectForKey:@"category"]];
-        cell.distance.text = [NSString stringWithFormat:@"$%@/hr",[entry objectForKey:@"salary"]];
-        cell.cellImageView.image = [UIImage imageNamed:@"coder"];
+        if(_jobData.count > 0){
+            NSDictionary *entry = [_jobData objectAtIndex:0];
+            
+            cell.jobTitle.text = [NSString stringWithFormat:@"%@",[entry objectForKey:@"title"]];
+            cell.salary.text = [NSString stringWithFormat:@"%@",[entry objectForKey:@"category"]];
+            cell.distance.text = [NSString stringWithFormat:@"$%@/hr",[entry objectForKey:@"salary"]];
+            cell.cellImageView.image = [UIImage imageNamed:@"coder"];
+        }
+        
+        return cell;
+    } else if (indexPath.row == 1) {
+        NSString *cellIdentifier = @"jobDetails";
+        JobDetailsTableViewCell *cell = (JobDetailsTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        
+        if (cell == nil)
+            cell = [[JobDetailsTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+        
+        if(_jobData.count > 0){
+            NSDictionary *entry = [_jobData objectAtIndex:0];
+            
+            if ([[entry objectForKey:@"comments"] isEqualToString:@""])
+                cell.details.text = @"No description provided";
+            else
+                cell.details.text = [NSString stringWithFormat:@"%@",[entry objectForKey:@"comments"]];
+        }
+        
+        return cell;
+        
+    } else {
+        NSString *cellIdentifier = @"accept";
+        UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        
+        if (cell == nil)
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+        
+        return cell;
     }
-    
-    return cell;
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    jobID = [[_data objectAtIndex:indexPath.row] objectForKey:@"offer_id"];
-    [self performSegueWithIdentifier:@"showJob" sender:self];
-}
-
--(IBAction)goBackToJobs:(UIStoryboardSegue *)segue {
-    
+    //jobID = [[_data objectAtIndex:indexPath.row] objectForKey:@"offer_id"];
+    //[self performSegueWithIdentifier:@"showJob" sender:self];
 }
 
 /*

@@ -8,11 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ProfileEditTableViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@import Firebase;
+
+@interface ProfileEditTableViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (copy,nonatomic) NSArray *identifiers;
 @property (copy,nonatomic) NSArray *defaultVal;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *saveBtn;
-@property (strong, nonatomic) UIImagePickerController *picker;
+
+@property NSDictionary *userData;
+@property (strong, nonatomic) FIRDatabaseReference *ref;
 
 @end

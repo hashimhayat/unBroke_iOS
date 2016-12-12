@@ -7,10 +7,16 @@
 //
 #import <UIKit/UIKit.h>
 
-@interface MyJobsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@import Firebase;
+
+@interface MyJobsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,  UISearchBarDelegate, UISearchDisplayDelegate>
 
 @property (strong, nonatomic) UITextField *activeField;
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
-@property NSMutableArray *data;
+
+@property (strong, nonatomic) NSMutableArray *data;
+@property (strong, nonatomic) NSMutableArray *originalData;
+
+@property (strong, nonatomic) FIRDatabaseReference *ref;
 
 @end

@@ -10,12 +10,10 @@
 #import "TypicalTableViewCell.h"
 #import "profilePictureCell.h"
 
+@import Firebase;
+
 @interface ProfileEditTableViewController ()
-
 @end
-
-extern NSString *apiUrl;
-extern NSInteger userID;
 
 @implementation ProfileEditTableViewController
 
@@ -30,6 +28,9 @@ extern NSInteger userID;
     self.identifiers = @[@"First Name", @"Last Name", @"Age", @"Occupation", @"Bio"];
     self.defaultVal =  @[@"", @"", @"", @"", @""];
     
+    self.ref = [[FIRDatabase database] reference];
+    _userData = [[NSDictionary alloc] init];
+
     [self loadDataFromServer];
 }
 
@@ -76,35 +77,15 @@ extern NSInteger userID;
     }
 }
 
-- (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.row == 0){
-        _picker = [[UIImagePickerController alloc] init];
-        _picker.delegate = self;
-        _picker.allowsEditing = YES;
-        _picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-        [self presentViewController:_picker animated:YES completion:NULL];     }
-}
-
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    
-    UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
-    //self.imageView.image = chosenImage;
-    [_picker dismissViewControllerAnimated:YES completion:NULL];
-}
-
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
-{
-    [_picker dismissViewControllerAnimated:YES completion:NULL];
-}
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if ([[segue identifier] isEqualToString:@"save"]){
+        
         NSString *fname,*lname,*age,*occupation,*bio;
-        NSData *profilePic;
+
         for (NSInteger i = 0; i < [self.tableView numberOfRowsInSection:0]; i++){
             if(i == 0){
-                profilePictureCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-                //profilePic = UIImagePNGRepresentation(cell.image);
+                //not implemented yet
             } else if (i == 1){
                 TypicalTableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
                 fname = cell.value.text;
@@ -138,29 +119,21 @@ extern NSInteger userID;
         [self.view addSubview:overlay];
         [spinner startAnimating];
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^ {
-            //adapted from http://codewithchris.com/tutorial-how-to-use-ios-nsurlconnection-by-example/
-            NSString *post = [NSString stringWithFormat:@"user_id=%ld&fname=%@&lname=%@&age=%@&occupation=%@&bio=%@&image=%@",
-                              userID,fname,lname,age,occupation,bio, profilePic];
-            NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
-            NSString *postLength = [NSString stringWithFormat:@"%lu" , (unsigned long)[postData length]];
-            NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/update_user_info.php", apiUrl]];
-            NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-            [request setURL:url];
-            [request setHTTPMethod:@"POST"];
-            [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-            [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-            [request setHTTPBody:postData];
-            [request setTimeoutInterval:10.0];
-            NSURLSession *session = [NSURLSession sharedSession];
-            
-            [[session dataTaskWithRequest:request
-                        completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                            [spinner stopAnimating];
-                            [overlay removeFromSuperview];
-                        }]
-             resume];
-        });
+        NSDictionary *newUserData = @{@"firstName":fname,
+                                     @"lastName":lname,
+                                     @"age":age,
+                                      @"occupation":occupation,
+                                     @"bio":bio,
+        };
+        
+        FIRUser *user = [FIRAuth auth].currentUser;
+        FIRDatabaseReference *profileRef = [[_ref child:@"users"] child:user.uid];
+        
+        [profileRef setValue:newUserData];
+        
+        [spinner stopAnimating];
+        [overlay removeFromSuperview];
+        
     }
 }
 
@@ -180,74 +153,41 @@ extern NSInteger userID;
     [self.view addSubview:overlay];
     [spinner startAnimating];
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^ {
-        //adapted from http://codewithchris.com/tutorial-how-to-use-ios-nsurlconnection-by-example/
-        NSString *post = [NSString stringWithFormat:@"user_id=%ld",userID];
-        NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
-        NSString *postLength = [NSString stringWithFormat:@"%lu" , (unsigned long)[postData length]];
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/get_info.php", apiUrl]];
-        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-        [request setURL:url];
-        [request setHTTPMethod:@"POST"];
-        [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-        [request setHTTPBody:postData];
-        [request setTimeoutInterval:10.0];
-        NSURLSession *session = [NSURLSession sharedSession];
-        
-        [[session dataTaskWithRequest:request
-                    completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                        if(!error){
-                            NSError *JSONerror = nil;
-                            id object = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
-                            
-                            if(!JSONerror){
-                                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                                    NSDictionary *results = object;
-                                    //NSLog(@"%@",results);
-                                    for (NSInteger i = 0; i < [self.tableView numberOfRowsInSection:0]; i++){
-                                        if(i == 0){
-                                            profilePictureCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-                                            //cell.image.image;
-                                        } else if (i == 1){
-                                            TypicalTableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-                                            NSString *name = [results valueForKey:@"fullname"];
-                                            NSArray *seperatedName = [name componentsSeparatedByString:@" "];
-                                            if(seperatedName.count > 1)
-                                                cell.value.text = [seperatedName objectAtIndex:0];
-                                            else
-                                                cell.value.text = [results valueForKey:@"fullname"];
-                                        } else if (i == 2){
-                                            TypicalTableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-                                            NSString *name = [results valueForKey:@"fullname"];
-                                            NSArray *seperatedName = [name componentsSeparatedByString:@" "];
-                                            if(seperatedName.count > 1)
-                                                cell.value.text = [seperatedName objectAtIndex:1];
-                                            else
-                                                cell.value.text = @"";
-                                        } else if (i == 3){
-                                            TypicalTableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-                                            cell.value.text = [results valueForKey:@"age"];
-                                        } else if (i == 4){
-                                            TypicalTableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-                                            cell.value.text = [results valueForKey:@"occupation"];
-                                        } else if (i == 5){
-                                            TypicalTableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-                                            cell.value.text = [results valueForKey:@"bio"];
-                                        }
-                                    }
-                                    
-                                    [spinner stopAnimating];
-                                    [overlay removeFromSuperview];
-                                }];
-                            }
-                        }
-                    }]
-         resume];
-    });
+    FIRUser *user = [FIRAuth auth].currentUser;
+    FIRDatabaseReference *userRef = [[_ref child:@"users"] child:user.uid];
     
-}
+    [userRef observeEventType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+        if(snapshot.value != [NSNull null])
+            _userData = snapshot.value;
+        
+        for (NSInteger i = 0; i < [self.tableView numberOfRowsInSection:0]; i++){
+            if(i == 0){
+                profilePictureCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+                //not implemented yet
+            } else if (i == 1){
+                TypicalTableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+                cell.value.text = [_userData objectForKey:@"firstName"];
+            } else if (i == 2){
+                TypicalTableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+                cell.value.text = [_userData objectForKey:@"lastName"];
+            } else if (i == 3){
+                TypicalTableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+                cell.value.text = [_userData objectForKey:@"age"];
+            } else if (i == 4){
+                TypicalTableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+                cell.value.text = [_userData objectForKey:@"occupation"];
+            } else if (i == 5){
+                TypicalTableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+                cell.value.text = [_userData objectForKey:@"bio"];
+            }
+        }
+    }];
+    
+    
+    [spinner stopAnimating];
+    [overlay removeFromSuperview];
 
+}
 
 @end
 

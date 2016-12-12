@@ -7,18 +7,14 @@
 //
 
 #import "JobsFilterViewController.h"
-
-typedef void (^ IteratorBlock)(id object);
+#import "JobsViewController.h"
 
 @interface JobsFilterViewController ()
-
 @end
 
 @implementation JobsFilterViewController
 
 @synthesize tableView = _tableView;
-
-extern NSString *apiUrl;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -31,39 +27,15 @@ extern NSString *apiUrl;
     //init picker data
     _sortBy = @[@"Name", @"Price", @"Salary"];
     _sortIn = @[@"Ascending Order", @"Descending Order"];
-    _cats = @[@"Category 1", @"Category 2", @"Category 3"];
+    _cats = @[@"Airline", @"Arts", @"Business", @"Media", @"Medical", @"Service", @"Teaching", @"Technology"];
     _subCats = @[@"Item 1", @"Item 2", @"Item 3", @"Item 4", @"Item 5", @"Item 6"];
-    _scrollSize = 50000;
     _show1 = false;
     _show3 = false;
     _show5 = false;
     _show7 = false;
     
-    [self sendPostRequestWithData:@"" sendPostRequestTo:@"get_job_cat.php" postCustomCommand:^(id object){
-        NSDictionary *results = object;
-        NSMutableArray *temp = [[NSMutableArray alloc] init];
-        for (NSDictionary *entry in results) {
-            if([entry objectForKey:@"category"] != nil)
-                [temp addObject:[entry objectForKey:@"category"]];
-        }
-        
-        _cats = [temp copy];
-        
-        //picker infinite scroll starting at first element
-        NSInteger start = _scrollSize/2;
-        while(start % _sortBy.count!=0)
-            start++;
-        [_sortByPicker selectRow:start inComponent:0 animated:NO];
-        while(start % _sortIn.count!=0)
-            start++;
-        [_sortInPicker selectRow:start inComponent:0 animated:NO];
-        while(start % _cats.count!=0)
-            start++;
-        [_categoryPicker selectRow:start inComponent:0 animated:NO];
-        while(start % _subCats.count!=0)
-            start++;
-        [_subCategoryPicker selectRow:start inComponent:0 animated:NO];
-    }];
+    _categoryTextField.text = @"Airline";
+    [_categoryPicker selectRow:12504 inComponent:0 animated:NO];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -76,10 +48,12 @@ extern NSString *apiUrl;
  *
  */
 
-
 //set height of cells; row 6 is description field, row 2 and 4 are pickers
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if(indexPath.row == 6 || indexPath.row == 7 || indexPath.row == 10 || indexPath.row == 11 || indexPath.row == 12 || indexPath.row == 13)
+    if(indexPath.row == 6 || indexPath.row == 7 || indexPath.row == 10 || indexPath.row == 11 ||
+       indexPath.row == 12 || indexPath.row == 13 || indexPath.row == 14 || indexPath.row == 15 ||
+       indexPath.row == 0 || indexPath.row == 1 || indexPath.row == 2 || indexPath.row == 3 ||
+       indexPath.row == 8 || indexPath.row == 9)
         return 0.0f;
     
     if(indexPath.row == 1 && _show1 == true)
@@ -184,7 +158,7 @@ extern NSString *apiUrl;
 
 // The number of rows of data in picker
 - (long)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component{
-    return _scrollSize;
+    return 50000;
 }
 
 // The data to return for the row and component (column) that's being passed in
@@ -255,89 +229,20 @@ extern NSString *apiUrl;
     UIAlertAction* ok = [UIAlertAction
                          actionWithTitle:@"OK"
                          style:UIAlertActionStyleDefault
-                         handler:^(UIAlertAction * action)
-                         {
-                             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                                 [alert dismissViewControllerAnimated:YES completion:nil];
-                             }];
+                         handler:^(UIAlertAction * action){
+                             [alert dismissViewControllerAnimated:YES completion:nil];
                          }];
     
-    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-        [alert addAction:ok];
-        [self presentViewController:alert animated:YES completion:nil];
-    }];
+    [alert addAction:ok];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
--(void) sendPostRequestWithData:(NSString *)postString sendPostRequestTo:(NSString *)fileName postCustomCommand:(IteratorBlock)iteratorBlock{
-    //create translucent overlay
-    UIView *overlay = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    [overlay setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.3]];
-    
-    //create a moving spinner and add it to the overlay
-    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    [spinner startAnimating];
-    [overlay addSubview:spinner];
-    
-    //position spinner in the center of the overlay and animate the appearance of the overlay
-    spinner.center = CGPointMake(self.view.frame.size.width / 2.0, self.view.frame.size.height / 2.0);
-    
-    //add spinner to overlay
-    [UIView animateWithDuration:0.5
-                     animations:^{
-                         [self.view addSubview:overlay];
-                         overlay.alpha = 1.0;
-                     }
-     ];
-    
-    //wait for 0.3 seconds before sending post request for aesthetic reasons - overlay and spinner shown for > 0.3 seconds
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^ {
-        //send a post request
-        //code adapted from http://codewithchris.com/tutorial-how-to-use-ios-nsurlconnection-by-example/
-        
-        //create and format post request to be send to api server
-        NSData *postData = [postString dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
-        NSString *postLength = [NSString stringWithFormat:@"%lu" , (unsigned long)[postData length]];
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", apiUrl, fileName]];
-        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-        [request setURL:url];
-        [request setHTTPMethod:@"POST"];
-        [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-        [request setHTTPBody:postData];
-        [request setTimeoutInterval:5.0];
-        
-        //Send Post Request
-        NSURLSession *session = [NSURLSession sharedSession];
-        [[session dataTaskWithRequest:request
-                    completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                        
-                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                            [spinner stopAnimating];
-                            [overlay removeFromSuperview];
-                        }];
-                        
-                        if(error){
-                            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                                [self showAlertWithMessage:@"Server Error"];
-                            }];
-                            return;
-                        }
-                        
-                        NSError *JSONerror = nil;
-                        id object = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
-                        
-                        if(JSONerror){
-                            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                                [self showAlertWithMessage:@"Server Error"];
-                            }];
-                            return;
-                        }
-                        
-                        //run custom commands through block on post results
-                        iteratorBlock(object);
-                    }]
-         resume];
-    });
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if ([[segue identifier] isEqualToString:@"filter"]){
+        JobsViewController *destViewController = segue.destinationViewController;
+        destViewController.filterCategory = _categoryTextField.text;
+    }
 }
 
 @end

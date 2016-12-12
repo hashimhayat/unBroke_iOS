@@ -10,7 +10,6 @@
 #import "MessagesViewController.h"
 
 @interface MessagesViewController ()
-
 @end
 
 @implementation MessagesViewController
@@ -50,7 +49,7 @@
     cell.name.text = self.identifiers[indexPath.row];
     cell.lastText.text = self.defaultVal[indexPath.row];
     cell.image.image = [UIImage imageNamed:self.profilePic[indexPath.row]];
-    
+    cell.image.layer.cornerRadius = 7;
     return cell;
 }
 

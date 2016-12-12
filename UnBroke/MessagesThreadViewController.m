@@ -58,6 +58,7 @@
         cell.sender.text = self.identifiers[indexPath.row];
         cell.message.text = self.defaultVal[indexPath.row];
         cell.image.image = [UIImage imageNamed:self.profilePic[indexPath.row]];
+        cell.image.layer.cornerRadius = 7;
         return cell;
     }
 }

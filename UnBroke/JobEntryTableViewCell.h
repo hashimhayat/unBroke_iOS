@@ -11,8 +11,8 @@
 @interface JobEntryTableViewCell : UITableViewCell
 
 @property (strong, nonatomic) IBOutlet UIImageView *cellImageView;
-@property (strong, nonatomic) IBOutlet UILabel *jobTitle;
+@property (strong, nonatomic) IBOutlet UILabel *name;
+@property (strong, nonatomic) IBOutlet UILabel *category;
 @property (strong, nonatomic) IBOutlet UILabel *salary;
-@property (strong, nonatomic) IBOutlet UILabel *distance;
 
 @end

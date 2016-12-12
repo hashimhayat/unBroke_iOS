@@ -9,23 +9,30 @@
 #import "RegisterViewController.h"
 
 @interface RegisterViewController ()
-
 @end
-
-typedef void (^ IteratorBlock)(id object);
-
-extern NSString *apiUrl;
-extern NSInteger userID;
-extern NSInteger cornerRadius;
 
 @implementation RegisterViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self configureLayout];
     [self registerForKeyboardNotifications];
-    
-    //add rounded corners to objects
-    _usernameTextField.layer.cornerRadius = cornerRadius;
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+}
+
+NSString *apiUrl;
+NSInteger cornerRadius;
+NSInteger jobID;
+NSInteger userID;
+
+#pragma mark Program Functions
+
+//Adds rounded corners to text fields and buttons
+- (void) configureLayout{
+    NSInteger cornerRadius = 7;
     _emailTextField.layer.cornerRadius = cornerRadius;
     _pwdTextField.layer.cornerRadius = cornerRadius;
     _pwdCheckTextField.layer.cornerRadius = cornerRadius;
@@ -33,59 +40,58 @@ extern NSInteger cornerRadius;
     _signUpBtn.layer.cornerRadius = cornerRadius;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-}
+#pragma mark IBAction Functions
 
-//Perform validation after clicking on sign up button. If all tests pass, attempt to register user
+//Sign up function. Validates input data and registers user in Firebase database
 - (IBAction)signUpBtnClick:(id)sender {
+    //create overlay
+    UIView *overlay = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    [overlay setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.3]];
+    
+    //create spinner and set its position to center
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    spinner.center = CGPointMake(self.view.frame.size.width / 2.0, self.view.frame.size.height / 2.0);
+    
+    //add spinner to overlay and add overlay to view + start animating
+    [UIView animateWithDuration:0.2
+                     animations:^{overlay.alpha = 1.0;}
+                     completion:^(BOOL finished){ [overlay addSubview:spinner]; }];
+    [self.view addSubview:overlay];
+    [spinner startAnimating];
+
     NSString *errorMsg = nil;
-    if(_usernameTextField.text.length < 1 || _emailTextField.text.length < 1 || _pwdTextField.text.length < 1 || _pwdCheckTextField.text.length <1){
+    
+    if(_emailTextField.text.length < 1 || _pwdTextField.text.length < 1 || _pwdCheckTextField.text.length <1){
         errorMsg = @"Please fill in all fields";
-    } else if (![self validateEmailWithString:_emailTextField.text]){
-        errorMsg = @"Wrong email address format";
     } else if (![_pwdTextField.text isEqualToString:_pwdCheckTextField.text]){
         errorMsg = @"Both password fields have to be the same";
     }
     
+    //Firebase will validate email address format
     if(errorMsg){
         [self showAlertWithMessage:errorMsg];
     } else {
-        [self signupWithUser:_usernameTextField.text signupWithPwd:_pwdTextField.text signupEmail:_emailTextField.text];
+        [[FIRAuth auth] createUserWithEmail: _emailTextField.text
+                                   password: _pwdTextField.text
+                                 completion:^(FIRUser *_Nullable user, NSError *_Nullable error) {
+                                     if(error)
+                                         [self showAlertWithMessage:[error localizedDescription]];
+                                     else
+                                         [self performSegueWithIdentifier:@"signedUp" sender:self];
+                                     
+                                     [spinner stopAnimating];
+                                     [overlay removeFromSuperview];
+                                 }
+         ];
     }
 }
 
-//sends registration data to api on server
--(void)signupWithUser:(NSString *)username signupWithPwd:(NSString *)password signupEmail:(NSString *)email{
-    NSString *post = [NSString stringWithFormat:@"username=%@&password=%@&email=%@",username, password, email];
-    
-    [self sendPostRequestWithData:post sendPostRequestTo:@"signup.php" postCustomCommand:^(id object){
-        NSDictionary *results = [object objectAtIndex:0];
-        userID = [[results valueForKey:@"user_id"] integerValue];
-        
-        if(userID == -1)
-            //failure
-            [self showAlertWithMessage:@"Invalid Input"];
-        else
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                [self performSegueWithIdentifier:@"signedUp" sender:self];
-            }];
-    }];
+- (IBAction)backBtnClick:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
-/*
- *
- * Custom helpers
- *
- */
 
-//validates email format
-//credit to http://stackoverflow.com/questions/5428304/email-validation-on-textfield-in-iphone-sdk
-- (BOOL)validateEmailWithString:(NSString*)email{
-    NSString *emailRegex = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
-    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
-    return [emailTest evaluateWithObject:email];
-}
+#pragma mark Helper Functions
 
 //Animates and shows a custom alert message
 -(void) showAlertWithMessage:(NSString *)msg {
@@ -104,83 +110,8 @@ extern NSInteger cornerRadius;
                              }];
                          }];
     
-    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-        [alert addAction:ok];
-        [self presentViewController:alert animated:YES completion:nil];
-    }];
-}
-
-//Animates and sends a post request with the options of setting a block of stuff to do after response received
--(void) sendPostRequestWithData:(NSString *)postString sendPostRequestTo:(NSString *)fileName postCustomCommand:(IteratorBlock)iteratorBlock{
-    //create translucent overlay
-    UIView *overlay = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    [overlay setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.3]];
-    
-    //create a moving spinner and add it to the overlay
-    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    [spinner startAnimating];
-    [overlay addSubview:spinner];
-    
-    //position spinner in the center of the overlay and animate the appearance of the overlay
-    spinner.center = CGPointMake(self.view.frame.size.width / 2.0, self.view.frame.size.height / 2.0);
-    
-    //add spinner to overlay
-    [UIView animateWithDuration:0.5
-                     animations:^{
-                         [self.view addSubview:overlay];
-                         overlay.alpha = 1.0;
-                     }
-     ];
-    
-    //wait for 0.3 seconds before sending post request for aesthetic reasons - overlay and spinner shown for > 0.3 seconds
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^ {
-        //send a post request
-        //code adapted from http://codewithchris.com/tutorial-how-to-use-ios-nsurlconnection-by-example/
-        
-        //create and format post request to be send to api server
-        NSData *postData = [postString dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
-        NSString *postLength = [NSString stringWithFormat:@"%lu" , (unsigned long)[postData length]];
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", apiUrl, fileName]];
-        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-        [request setURL:url];
-        [request setHTTPMethod:@"POST"];
-        [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-        [request setHTTPBody:postData];
-        [request setTimeoutInterval:5.0];
-        
-        //Send Post Request
-        NSURLSession *session = [NSURLSession sharedSession];
-        [[session dataTaskWithRequest:request
-                    completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                        
-                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                            [spinner stopAnimating];
-                            [overlay removeFromSuperview];
-                        }];
-                        
-                        if(error){
-                            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                                [self showAlertWithMessage:@"Server Error"];
-                            }];
-                            return;
-                        }
-                        
-                        NSError *JSONerror = nil;
-                        id object = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
-                        
-                        if(JSONerror){
-                            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                                [self showAlertWithMessage:@"Server Error"];
-                            }];
-                            return;
-                        }
-                        
-                        //run custom commands through block on post results
-                        iteratorBlock(object);
-                    }]
-         resume];
-    });
+    [alert addAction:ok];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 /*
@@ -251,6 +182,5 @@ extern NSInteger cornerRadius;
     _scrollView.contentInset = contentInsets;
     _scrollView.scrollIndicatorInsets = contentInsets;
 }
-
 
 @end

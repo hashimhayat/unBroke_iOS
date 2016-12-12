@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2019191E1DFDF9890056216F /* LastJobsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2019191D1DFDF9890056216F /* LastJobsTableViewCell.m */; };
+		201919211DFDF9940056216F /* NotificationsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 201919201DFDF9940056216F /* NotificationsTableViewCell.m */; };
+		201919241DFDF9B80056216F /* LatestJobUpdatesTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 201919231DFDF9B80056216F /* LatestJobUpdatesTableViewCell.m */; };
+		201919271DFE09FC0056216F /* JobResponseTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 201919261DFE09FC0056216F /* JobResponseTableViewCell.m */; };
+		201919291DFE1BED0056216F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 201919281DFE1BED0056216F /* GoogleService-Info.plist */; };
+		202686E71DFE7B880030A46B /* ApplicantNameTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 202686E61DFE7B880030A46B /* ApplicantNameTableViewCell.m */; };
 		207327E81DF5425B006B6A47 /* ThreadEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 207327E71DF5425B006B6A47 /* ThreadEntry.m */; };
 		207327EB1DF5476B006B6A47 /* ReceiverEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 207327EA1DF5476B006B6A47 /* ReceiverEntry.m */; };
 		207327EE1DF54777006B6A47 /* SenderEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 207327ED1DF54777006B6A47 /* SenderEntry.m */; };
@@ -20,6 +26,7 @@
 		20DBFF231DE38CA7002E0675 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20DBFF211DE38CA7002E0675 /* LaunchScreen.storyboard */; };
 		20DE371E1DFBD6270001ADAF /* JobsSingleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20DE371D1DFBD6270001ADAF /* JobsSingleViewController.m */; };
 		20DE37211DFBDD510001ADAF /* JobDetailsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 20DE37201DFBDD510001ADAF /* JobDetailsTableViewCell.m */; };
+		20DE37241DFC45CB0001ADAF /* MyJobsSingleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20DE37231DFC45CB0001ADAF /* MyJobsSingleViewController.m */; };
 		20E26A3B1DEE72000026A353 /* JobsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E26A3A1DEE72000026A353 /* JobsViewController.m */; };
 		20E26A3E1DEE79EB0026A353 /* JobsFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E26A3D1DEE79EB0026A353 /* JobsFilterViewController.m */; };
 		20E26A411DEE845A0026A353 /* JobsPostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E26A401DEE845A0026A353 /* JobsPostViewController.m */; };
@@ -33,9 +40,21 @@
 		20E3B9AC1DF677E300F7DBD0 /* ProfileEditTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E3B9AB1DF677E300F7DBD0 /* ProfileEditTableViewController.m */; };
 		20E3B9AF1DF7613600F7DBD0 /* Dashboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E3B9AE1DF7613600F7DBD0 /* Dashboard.m */; };
 		20E3B9B31DF8D6F600F7DBD0 /* titleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E3B9B21DF8D6F600F7DBD0 /* titleTableViewCell.m */; };
+		8596AAF2BBB92CB60460A01F /* libPods-UnBroke.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE6AFB976611D048E7BA5701 /* libPods-UnBroke.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2019191C1DFDF9890056216F /* LastJobsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LastJobsTableViewCell.h; sourceTree = "<group>"; };
+		2019191D1DFDF9890056216F /* LastJobsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LastJobsTableViewCell.m; sourceTree = "<group>"; };
+		2019191F1DFDF9940056216F /* NotificationsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationsTableViewCell.h; sourceTree = "<group>"; };
+		201919201DFDF9940056216F /* NotificationsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationsTableViewCell.m; sourceTree = "<group>"; };
+		201919221DFDF9B80056216F /* LatestJobUpdatesTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LatestJobUpdatesTableViewCell.h; sourceTree = "<group>"; };
+		201919231DFDF9B80056216F /* LatestJobUpdatesTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LatestJobUpdatesTableViewCell.m; sourceTree = "<group>"; };
+		201919251DFE09FC0056216F /* JobResponseTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobResponseTableViewCell.h; sourceTree = "<group>"; };
+		201919261DFE09FC0056216F /* JobResponseTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobResponseTableViewCell.m; sourceTree = "<group>"; };
+		201919281DFE1BED0056216F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		202686E51DFE7B880030A46B /* ApplicantNameTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplicantNameTableViewCell.h; sourceTree = "<group>"; };
+		202686E61DFE7B880030A46B /* ApplicantNameTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplicantNameTableViewCell.m; sourceTree = "<group>"; };
 		207327E61DF5425B006B6A47 /* ThreadEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadEntry.h; sourceTree = "<group>"; };
 		207327E71DF5425B006B6A47 /* ThreadEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThreadEntry.m; sourceTree = "<group>"; };
 		207327E91DF5476B006B6A47 /* ReceiverEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReceiverEntry.h; sourceTree = "<group>"; };
@@ -60,6 +79,8 @@
 		20DE371D1DFBD6270001ADAF /* JobsSingleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobsSingleViewController.m; sourceTree = "<group>"; };
 		20DE371F1DFBDD510001ADAF /* JobDetailsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobDetailsTableViewCell.h; sourceTree = "<group>"; };
 		20DE37201DFBDD510001ADAF /* JobDetailsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobDetailsTableViewCell.m; sourceTree = "<group>"; };
+		20DE37221DFC45CB0001ADAF /* MyJobsSingleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyJobsSingleViewController.h; sourceTree = "<group>"; };
+		20DE37231DFC45CB0001ADAF /* MyJobsSingleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyJobsSingleViewController.m; sourceTree = "<group>"; };
 		20E26A391DEE72000026A353 /* JobsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobsViewController.h; sourceTree = "<group>"; };
 		20E26A3A1DEE72000026A353 /* JobsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobsViewController.m; sourceTree = "<group>"; };
 		20E26A3C1DEE79EB0026A353 /* JobsFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobsFilterViewController.h; sourceTree = "<group>"; };
@@ -86,6 +107,9 @@
 		20E3B9AE1DF7613600F7DBD0 /* Dashboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Dashboard.m; sourceTree = "<group>"; };
 		20E3B9B11DF8D6F600F7DBD0 /* titleTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = titleTableViewCell.h; sourceTree = "<group>"; };
 		20E3B9B21DF8D6F600F7DBD0 /* titleTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = titleTableViewCell.m; sourceTree = "<group>"; };
+		2D49D87B61D8D51CF2A8964B /* Pods-UnBroke.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UnBroke.debug.xcconfig"; path = "Pods/Target Support Files/Pods-UnBroke/Pods-UnBroke.debug.xcconfig"; sourceTree = "<group>"; };
+		C6C9CA5C64FA563899B725FF /* Pods-UnBroke.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UnBroke.release.xcconfig"; path = "Pods/Target Support Files/Pods-UnBroke/Pods-UnBroke.release.xcconfig"; sourceTree = "<group>"; };
+		CE6AFB976611D048E7BA5701 /* libPods-UnBroke.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-UnBroke.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +117,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8596AAF2BBB92CB60460A01F /* libPods-UnBroke.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -102,6 +127,7 @@
 		201B7E5A1DFA2697008C12B7 /* Others */ = {
 			isa = PBXGroup;
 			children = (
+				201919281DFE1BED0056216F /* GoogleService-Info.plist */,
 				20DBFF211DE38CA7002E0675 /* LaunchScreen.storyboard */,
 				20DBFF161DE38CA7002E0675 /* AppDelegate.h */,
 				20DBFF171DE38CA7002E0675 /* AppDelegate.m */,
@@ -117,6 +143,8 @@
 			children = (
 				20DBFF121DE38CA7002E0675 /* UnBroke */,
 				20DBFF111DE38CA7002E0675 /* Products */,
+				8EF38E48492B8265536D8D41 /* Pods */,
+				F3D9D3CBCA37711F5725F78F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -163,6 +191,8 @@
 				207327EF1DF558A0006B6A47 /* TypicalTableViewCell.h */,
 				207327F01DF558A0006B6A47 /* TypicalTableViewCell.m */,
 				20DBFF141DE38CA7002E0675 /* main.m */,
+				202686E51DFE7B880030A46B /* ApplicantNameTableViewCell.h */,
+				202686E61DFE7B880030A46B /* ApplicantNameTableViewCell.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -211,6 +241,10 @@
 				20E26A501DEF8BBB0026A353 /* MyJobsViewController.m */,
 				20E26A3F1DEE845A0026A353 /* JobsPostViewController.h */,
 				20E26A401DEE845A0026A353 /* JobsPostViewController.m */,
+				20DE37221DFC45CB0001ADAF /* MyJobsSingleViewController.h */,
+				20DE37231DFC45CB0001ADAF /* MyJobsSingleViewController.m */,
+				201919251DFE09FC0056216F /* JobResponseTableViewCell.h */,
+				201919261DFE09FC0056216F /* JobResponseTableViewCell.m */,
 			);
 			name = "My Jobs";
 			sourceTree = "<group>";
@@ -231,8 +265,31 @@
 			children = (
 				20E3B9AD1DF7613600F7DBD0 /* Dashboard.h */,
 				20E3B9AE1DF7613600F7DBD0 /* Dashboard.m */,
+				2019191C1DFDF9890056216F /* LastJobsTableViewCell.h */,
+				2019191D1DFDF9890056216F /* LastJobsTableViewCell.m */,
+				2019191F1DFDF9940056216F /* NotificationsTableViewCell.h */,
+				201919201DFDF9940056216F /* NotificationsTableViewCell.m */,
+				201919221DFDF9B80056216F /* LatestJobUpdatesTableViewCell.h */,
+				201919231DFDF9B80056216F /* LatestJobUpdatesTableViewCell.m */,
 			);
 			name = Dashboard;
+			sourceTree = "<group>";
+		};
+		8EF38E48492B8265536D8D41 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				2D49D87B61D8D51CF2A8964B /* Pods-UnBroke.debug.xcconfig */,
+				C6C9CA5C64FA563899B725FF /* Pods-UnBroke.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		F3D9D3CBCA37711F5725F78F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CE6AFB976611D048E7BA5701 /* libPods-UnBroke.a */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -242,9 +299,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 20DBFF271DE38CA7002E0675 /* Build configuration list for PBXNativeTarget "UnBroke" */;
 			buildPhases = (
+				AAF85B7AA9A5F105A0EC82AB /* [CP] Check Pods Manifest.lock */,
 				20DBFF0C1DE38CA7002E0675 /* Sources */,
 				20DBFF0D1DE38CA7002E0675 /* Frameworks */,
 				20DBFF0E1DE38CA7002E0675 /* Resources */,
+				7325C21A0318F6ED24C99C24 /* [CP] Embed Pods Frameworks */,
+				0622194A4B28A63DF25F435E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -295,6 +355,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				20DBFF231DE38CA7002E0675 /* LaunchScreen.storyboard in Resources */,
+				201919291DFE1BED0056216F /* GoogleService-Info.plist in Resources */,
 				20DBFF201DE38CA7002E0675 /* Assets.xcassets in Resources */,
 				20DBFF1E1DE38CA7002E0675 /* Main.storyboard in Resources */,
 			);
@@ -302,11 +363,60 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		0622194A4B28A63DF25F435E /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-UnBroke/Pods-UnBroke-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7325C21A0318F6ED24C99C24 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-UnBroke/Pods-UnBroke-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AAF85B7AA9A5F105A0EC82AB /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		20DBFF0C1DE38CA7002E0675 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				201919211DFDF9940056216F /* NotificationsTableViewCell.m in Sources */,
 				20E26A471DEE8E740026A353 /* MessagesThreadViewController.m in Sources */,
 				207327EE1DF54777006B6A47 /* SenderEntry.m in Sources */,
 				20E26A4A1DEE9EB50026A353 /* ProfileViewController.m in Sources */,
@@ -319,17 +429,22 @@
 				20E3B9A61DF65D0400F7DBD0 /* JobEntryTableViewCell.m in Sources */,
 				20E3B9AC1DF677E300F7DBD0 /* ProfileEditTableViewController.m in Sources */,
 				20E26A3E1DEE79EB0026A353 /* JobsFilterViewController.m in Sources */,
+				20DE37241DFC45CB0001ADAF /* MyJobsSingleViewController.m in Sources */,
 				20DBFF151DE38CA7002E0675 /* main.m in Sources */,
 				207327F11DF558A0006B6A47 /* TypicalTableViewCell.m in Sources */,
 				20E26A511DEF8BBB0026A353 /* MyJobsViewController.m in Sources */,
 				20E3B9AF1DF7613600F7DBD0 /* Dashboard.m in Sources */,
+				201919271DFE09FC0056216F /* JobResponseTableViewCell.m in Sources */,
 				20E3B9B31DF8D6F600F7DBD0 /* titleTableViewCell.m in Sources */,
 				20E3B9A31DF63A8300F7DBD0 /* RegisterViewController.m in Sources */,
 				207327F41DF558E2006B6A47 /* profilePictureCell.m in Sources */,
 				207327E81DF5425B006B6A47 /* ThreadEntry.m in Sources */,
 				20E26A441DEE86740026A353 /* MessagesViewController.m in Sources */,
 				207327EB1DF5476B006B6A47 /* ReceiverEntry.m in Sources */,
+				201919241DFDF9B80056216F /* LatestJobUpdatesTableViewCell.m in Sources */,
 				20DE37211DFBDD510001ADAF /* JobDetailsTableViewCell.m in Sources */,
+				202686E71DFE7B880030A46B /* ApplicantNameTableViewCell.m in Sources */,
+				2019191E1DFDF9890056216F /* LastJobsTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -447,6 +562,7 @@
 		};
 		20DBFF281DE38CA7002E0675 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2D49D87B61D8D51CF2A8964B /* Pods-UnBroke.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 45YQQBEPHA;
@@ -459,6 +575,7 @@
 		};
 		20DBFF291DE38CA7002E0675 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C6C9CA5C64FA563899B725FF /* Pods-UnBroke.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 45YQQBEPHA;

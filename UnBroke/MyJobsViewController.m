@@ -8,38 +8,18 @@
 
 #import "MyJobsViewController.h"
 #import "JobEntryTableViewCell.h"
-
-typedef void (^ IteratorBlock)(id object);
+#import "MyJobsSingleViewController.h"
 
 @interface MyJobsViewController ()
-
 @end
 
 @implementation MyJobsViewController
 
 @synthesize tableView = _tableView;
 
-extern NSInteger userID;
-extern NSString *apiUrl;
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    [self sendPostRequestWithData:[NSString stringWithFormat:@"user_id=%ld",userID] sendPostRequestTo:@"job_posted_me.php" postCustomCommand:^(id object){
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            _data = [[NSMutableArray alloc] init];
-            
-            for (id o in object){
-                NSDictionary *entry = o;
-                if(entry != nil){
-                    [_data addObject:entry];
-                }
-            }
-            
-            [_tableView beginUpdates];
-            [_tableView endUpdates];
-        }];
-    }];
+    [self loadDataFirebase];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -52,17 +32,87 @@ extern NSString *apiUrl;
  *
  */
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 100;
+- (void) loadDataFirebase {
+    //create overlay
+    UIView *overlay = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    [overlay setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.3]];
+    
+    //create spinner and set its position to center
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    spinner.center = CGPointMake(self.view.frame.size.width / 2.0, self.view.frame.size.height / 2.0);
+    
+    //add spinner to overlay and add overlay to view + start animating
+    [UIView animateWithDuration:0.2
+                     animations:^{overlay.alpha = 1.0;}
+                     completion:^(BOOL finished){ [overlay addSubview:spinner]; }];
+    [self.view addSubview:overlay];
+    [spinner startAnimating];
+    
+    _ref = [[FIRDatabase database] reference];
+    
+    _data = [[NSMutableArray alloc] init];
+    _originalData = [[NSMutableArray alloc] init];
+    
+    FIRUser *user = [FIRAuth auth].currentUser;
+    FIRDatabaseReference *jobData = [_ref child:@"jobs"];
+    [jobData observeEventType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+        NSDictionary *jobs = snapshot.value;
+        _data = [[NSMutableArray alloc] init];
+        _originalData = [[NSMutableArray alloc] init];
+        
+        if(![jobs isEqual:[NSNull null]]){
+            for(NSDictionary *entry in jobs){
+                NSDictionary *job = [jobs valueForKeyPath:[NSString stringWithFormat:@"%@",entry]];
+                if([user.uid isEqualToString:[job objectForKey:@"owner"]]){
+                    [_originalData addObject:job];
+                }
+            }
+            
+            NSArray *sortedByDate = [_originalData sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+                NSString *firstStr = [(NSDictionary *)a objectForKey:@"timestamp"];
+                NSString *secondStr = [(NSDictionary *)b objectForKey:@"timestamp"];
+                NSTimeInterval firstInterval=[firstStr doubleValue];
+                NSTimeInterval secondInterval=[secondStr doubleValue];
+                NSDate *first = [NSDate dateWithTimeIntervalSince1970:firstInterval];
+                NSDate *second = [NSDate dateWithTimeIntervalSince1970:secondInterval];
+                
+                return [second compare:first];
+            }];
+            
+            _originalData = [sortedByDate mutableCopy];
+            _data = [sortedByDate mutableCopy];
+        }
+        
+        if([jobs isEqual:[NSNull null]] || _data.count == 0){
+            UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+            
+            messageLabel.text = @"No data is currently available";
+            messageLabel.textColor = [UIColor darkGrayColor];
+            messageLabel.numberOfLines = 0;
+            messageLabel.textAlignment = NSTextAlignmentCenter;
+            [messageLabel sizeToFit];
+            
+            _tableView.backgroundView = messageLabel;
+        }
+        
+        [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+        
+        [spinner stopAnimating];
+        [overlay removeFromSuperview];
+    }];
 }
 
+- (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return 0;
+}
+
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return _data.count;
+}
+
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if(_data == nil)
-        return 0.0f;
-    
-    if(indexPath.row > _data.count-1)
-        return 0.0f;
-    
     return 100.0f;
 }
 
@@ -73,30 +123,35 @@ extern NSString *apiUrl;
     if (cell == nil)
         cell = [[JobEntryTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     
-    if(_data != nil){
-        if(indexPath.row > _data.count-1)
-            return cell;
+    if(_data.count > 0){
+        //load data into table if data is present
+        self.tableView.backgroundView = nil;
         
-        NSDictionary *entry = [[_data objectAtIndex:indexPath.row] objectAtIndex:0];
+        NSDictionary *job = [_data objectAtIndex:indexPath.row];
         
-        NSLog(@"%@",entry);
-        cell.jobTitle.text = [NSString stringWithFormat:@"%@",[entry objectForKey:@"title"]];
-        cell.salary.text = [NSString stringWithFormat:@"%@",[entry objectForKey:@"category"]];
-        cell.distance.text = [NSString stringWithFormat:@"$%@/hr",[entry objectForKey:@"salary"]];
-        cell.cellImageView.image = [UIImage imageNamed:@"coder"];
+        cell.name.text = [NSString stringWithFormat:@"%@",[job objectForKey:@"name"]];
+        cell.category.text = [NSString stringWithFormat:@"%@",[job objectForKey:@"category"]];
+        cell.salary.text = [NSString stringWithFormat:@"$%@/hr",[job objectForKey:@"salary"]];
+        cell.cellImageView.image = [UIImage imageNamed:[self getCategoryImageName:[job objectForKey:@"category"]]];
+        cell.cellImageView.layer.cornerRadius = 7;
     }
     
     return cell;
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.row == 2)
-        [self performSegueWithIdentifier:@"showJob" sender:self];
+    [self performSegueWithIdentifier:@"showMyJob" sender:self];
 }
 
--(IBAction)goBackToMyJobs:(UIStoryboardSegue *)segue {
-    
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"showMyJob"]) {
+        NSIndexPath *indexPath = [_tableView indexPathForSelectedRow];
+        MyJobsSingleViewController *destViewController = segue.destinationViewController;
+        destViewController.job = [_data objectAtIndex:indexPath.row];
+    }
 }
+
+-(IBAction)goBackToMyJobs:(UIStoryboardSegue *)segue {}
 
 /*
  *
@@ -116,156 +171,77 @@ extern NSString *apiUrl;
                          style:UIAlertActionStyleDefault
                          handler:^(UIAlertAction * action)
                          {
-                             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                                 [alert dismissViewControllerAnimated:YES completion:nil];
-                             }];
+                            [alert dismissViewControllerAnimated:YES completion:nil];
                          }];
     
-    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-        [alert addAction:ok];
-        [self presentViewController:alert animated:YES completion:nil];
-    }];
+    [alert addAction:ok];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
-//Animates and sends a post request with the options of setting a block of stuff to do after response received
--(void) sendPostRequestWithData:(NSString *)postString sendPostRequestTo:(NSString *)fileName postCustomCommand:(IteratorBlock)iteratorBlock{
-    //create translucent overlay
-    UIView *overlay = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    [overlay setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.3]];
-    
-    //create a moving spinner and add it to the overlay
-    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    [spinner startAnimating];
-    [overlay addSubview:spinner];
-    
-    //position spinner in the center of the overlay and animate the appearance of the overlay
-    spinner.center = CGPointMake(self.view.frame.size.width / 2.0, self.view.frame.size.height / 2.0);
-    
-    //add spinner to overlay
-    [UIView animateWithDuration:0.5
-                     animations:^{
-                         [self.view addSubview:overlay];
-                         overlay.alpha = 1.0;
-                     }
-     ];
-    
-    //wait for 0.3 seconds before sending post request for aesthetic reasons - overlay and spinner shown for > 0.3 seconds
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^ {
-        //send a post request
-        //code adapted from http://codewithchris.com/tutorial-how-to-use-ios-nsurlconnection-by-example/
-        
-        //create and format post request to be send to api server
-        NSData *postData = [postString dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
-        NSString *postLength = [NSString stringWithFormat:@"%lu" , (unsigned long)[postData length]];
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", apiUrl, fileName]];
-        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-        [request setURL:url];
-        [request setHTTPMethod:@"POST"];
-        [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-        [request setHTTPBody:postData];
-        [request setTimeoutInterval:5.0];
-        
-        //Send Post Request
-        NSURLSession *session = [NSURLSession sharedSession];
-        [[session dataTaskWithRequest:request
-                    completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                        
-                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                            [spinner stopAnimating];
-                            [overlay removeFromSuperview];
-                        }];
-                        
-                        if(error){
-                            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                                [self showAlertWithMessage:@"Server Error"];
-                            }];
-                            return;
-                        }
-                        
-                        NSError *JSONerror = nil;
-                        id object = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
-                        
-                        if(JSONerror){
-                            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                                [self showAlertWithMessage:@"Server Error"];
-                            }];
-                            return;
-                        }
-                        
-                        //run custom commands through block on post results
-                        iteratorBlock(object);
-                    }]
-         resume];
-    });
-}
-
-/*
- *
- * Keyboard helper functions
- * Credits: https://developer.apple.com/library/content/documentation/StringsTextFonts/Conceptual/TextAndWebiPhoneOS/KeyboardManagement/KeyboardManagement.html
- * Credits: http://stackoverflow.com/questions/1347779/how-to-navigate-through-textfields-next-done-buttons
- *
- */
-
-//configures return button on keyboard
--(BOOL)textFieldShouldReturn:(UITextField*)textField{
-    NSInteger nextTag = textField.tag + 1;
-    // Try to find next responder
-    UIResponder* nextResponder = [textField.superview viewWithTag:nextTag];
-    if (nextResponder) {
-        // Found next responder, so set it.
-        [nextResponder becomeFirstResponder];
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
+    [_data removeAllObjects];
+    if (searchText.length == 0) {
+        _data = [_originalData mutableCopy];
     } else {
-        // Not found, so remove keyboard.
-        [textField resignFirstResponder];
+        _data = [[NSMutableArray alloc] init];
+        for (NSDictionary *job in _originalData) {
+            if ([[[job objectForKey:@"name"] lowercaseString] containsString:[searchText lowercaseString]] ||
+                [[[job objectForKey:@"category"] lowercaseString] containsString:[searchText lowercaseString]] ||
+                [[[job objectForKey:@"salary"] lowercaseString] containsString:[searchText lowercaseString]]) {
+                
+                [_data addObject:job];
+            }
+        }
     }
-    return NO; // We do not want UITextField to insert line-breaks.
-}
-
-//sets active text field when user edits it
-- (void)textFieldDidBeginEditing:(UITextField *)textField{
-    _activeField = textField;
-}
-
-//removes active text field when user is done editing it
-- (void)textFieldDidEndEditing:(UITextField *)textField{
-    _activeField = nil;
-}
-
-//register self to receive notifications when keyboard is shown and hidden
-- (void)registerForKeyboardNotifications{
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWasShown:)
-                                                 name:UIKeyboardDidShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillBeHidden:)
-                                                 name:UIKeyboardWillHideNotification object:nil];
-}
-
-//when keyboard is shown ensure active text field can be seen
-- (void)keyboardWasShown:(NSNotification*)aNotification{
-    NSDictionary* info = [aNotification userInfo];
-    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     
-    UIEdgeInsets contentInsets = UIEdgeInsetsMake(64.0, 0.0, kbSize.height, 0.0);
-    _tableView.contentInset = contentInsets;
-    _tableView.scrollIndicatorInsets = contentInsets;
+    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+}
+
+-(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+    [_data removeAllObjects];
+    _data = [_originalData mutableCopy];
+    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+}
+
+-(NSString *) getCategoryImageName:(NSString *)category {
+    NSString *retVal = @"other";
     
-    // If active text field is hidden by keyboard, scroll it so it's visible
-    // Your app might not need or want this behavior.
-    CGRect aRect = self.view.frame;
-    aRect.size.height -= kbSize.height;
-    if (!CGRectContainsPoint(aRect, _activeField.frame.origin) ) {
-        [_tableView scrollRectToVisible:_activeField.frame animated:YES];
+    if([category isEqualToString:@"Airline"]){
+        retVal = @"airline";
     }
-}
-
-//when keyboard is hidden, set size of content to same as before
-- (void)keyboardWillBeHidden:(NSNotification*)aNotification{
-    UIEdgeInsets contentInsets = UIEdgeInsetsMake(64.0, 0.0, 0.0, 0.0);
-    _tableView.contentInset = contentInsets;
-    _tableView.scrollIndicatorInsets = contentInsets;
+    
+    if([category isEqualToString:@"Arts"]){
+        retVal = @"art";
+    }
+    
+    if([category isEqualToString:@"Business"]){
+        retVal = @"business";
+    }
+    
+    if([category isEqualToString:@"Law Enforcement"]){
+        retVal = @"legal";
+    }
+    
+    if([category isEqualToString:@"Media"]){
+        retVal = @"media";
+    }
+    
+    if([category isEqualToString:@"Medical"]){
+        retVal = @"medical";
+    }
+    
+    if([category isEqualToString:@"Technology"]){
+        retVal = @"tech";
+    }
+    
+    if([category isEqualToString:@"Service"]){
+        retVal = @"service";
+    }
+    
+    if([category isEqualToString:@"Teaching"]){
+        retVal = @"teaching";
+    }
+    return retVal;
 }
 
 @end

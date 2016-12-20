@@ -30,8 +30,6 @@
     [super didReceiveMemoryWarning];
 }
 
-#pragma mark Program Functions
-
 //Adds rounded corners to text fields and buttons
 - (void) configureLayout{
     NSInteger cornerRadius = 7;
@@ -51,8 +49,6 @@
         [self logInBtnClick:self];
     }
 }
-
-#pragma mark IBAction Functions
 
 - (IBAction)logInBtnClick:(id)sender {
     //create overlay
@@ -96,7 +92,7 @@
 }
 
 - (IBAction)connectFbBtnClick:(id)sender {
-    
+    [self showAlertWithMessage:@"We are currently experiencing trouble with Facebook. Please expect an update in the upcoming days"];
 }
 
 -(IBAction)goBackToLogin:(UIStoryboardSegue *)segue {
@@ -104,8 +100,6 @@
     BOOL status = [[FIRAuth auth] signOut:&signOutError];
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
-
-#pragma mark Helper Functions
 
 //Animates and shows a custom alert message
 -(void) showAlertWithMessage:(NSString *)msg {

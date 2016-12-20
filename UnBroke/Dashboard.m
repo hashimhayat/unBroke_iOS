@@ -32,9 +32,6 @@
     [self loadPostings];
 }
 
-- (void)viewDidLayoutSubviews{
-    [self setTableDimensions];
-}
 
 //to allow for scrolling
 - (void) setTableDimensions{
@@ -111,53 +108,80 @@
             
             _postingsTbl.backgroundView = messageLabel;
         }
-        [self loadUpdates];
         [_postingsTbl reloadData];
+        [self loadUpdates];
     }];
 }
 
 -(void) loadUpdates{
-    FIRUser *user = [FIRAuth auth].currentUser;
     _updates = [[NSMutableArray alloc] init];
-    
-    for(NSDictionary *job in _jobs){
-        if([job[@"owner"] isEqualToString:user.uid]){
-            if([job[@"matched"] isEqualToString:@"yes"]){
-                [_updates addObject:@{
-                                      @"message": [[NSString alloc] initWithFormat:@"Match found for job %@", job[@"name"]],
-                                      @"status":@"good",
-                }];
-            } else {
-                NSArray *applicants = (NSArray *)job[@"applicants"];
-                if(applicants.count == 1){
-                    [_updates addObject:@{
-                                          @"message": [[NSString alloc] initWithFormat:@"No applicants yet for job %@", job[@"name"]],
-                                          @"status":@"bad",
-                    }];
-                } else {
-                    [_updates addObject:@{
-                                          @"message": [[NSString alloc] initWithFormat:@"%lu possible candidates for job %@", applicants.count, job[@"name"]],
-                                          @"status":@"good",
-                                          }];
+    FIRUser *user = [FIRAuth auth].currentUser;
+    FIRDatabaseReference *jobData = [_ref child:@"jobs"];
+    [jobData observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+        NSDictionary *jobs = snapshot.value;
+        _myJobs = [[NSMutableArray alloc] init];
+        
+        if(![jobs isEqual:[NSNull null]]){
+            for(NSDictionary *entry in jobs){
+                NSDictionary *job = [jobs valueForKeyPath:[NSString stringWithFormat:@"%@",entry]];
+                if([user.uid isEqualToString:[job objectForKey:@"owner"]]){
+                    [_myJobs addObject:job];
                 }
             }
+            
+            NSArray *sortedByDate = [_myJobs sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+                NSString *firstStr = [(NSDictionary *)a objectForKey:@"timestamp"];
+                NSString *secondStr = [(NSDictionary *)b objectForKey:@"timestamp"];
+                NSTimeInterval firstInterval=[firstStr doubleValue];
+                NSTimeInterval secondInterval=[secondStr doubleValue];
+                NSDate *first = [NSDate dateWithTimeIntervalSince1970:firstInterval];
+                NSDate *second = [NSDate dateWithTimeIntervalSince1970:secondInterval];
+                
+                return [first compare:second];
+            }];
+            
+            _myJobs = [sortedByDate mutableCopy];
+            
+            for(NSDictionary *job in _myJobs){
+                if([[job objectForKey:@"matched"] isEqualToString:@"yes"]){
+                    [_updates addObject:@{
+                                          @"message": [[NSString alloc] initWithFormat:@"Match found for job %@", job[@"name"]],
+                                          @"status":@"good",
+                                          }];
+                } else {
+                    NSArray *applicants = (NSArray *)job[@"applicants"];
+                    if(applicants.count == 1){
+                        [_updates addObject:@{
+                                              @"message": [[NSString alloc] initWithFormat:@"No applicants yet for job %@", job[@"name"]],
+                                              @"status":@"bad",
+                                              }];
+                    } else {
+                        [_updates addObject:@{
+                                              @"message": [[NSString alloc] initWithFormat:@"%lu possible candidates for job %@", applicants.count, job[@"name"]],
+                                              @"status":@"good",
+                                              }];
+                    }
+                }
+            }
+            
+            
+            _updatesTbl.backgroundView = [[UIView alloc] init];
+            if(_updates.count == 0){
+                UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+                
+                messageLabel.text = @"No data is currently available";
+                messageLabel.textColor = [UIColor darkGrayColor];
+                messageLabel.numberOfLines = 0;
+                messageLabel.textAlignment = NSTextAlignmentCenter;
+                [messageLabel sizeToFit];
+                
+                _updatesTbl.backgroundView = messageLabel;
+            }
+            
+            [_updatesTbl reloadData];
         }
-    }
-    
-    _updatesTbl.backgroundView = [[UIView alloc] init];
-    if(_updates.count == 0){
-        UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
-        
-        messageLabel.text = @"No data is currently available";
-        messageLabel.textColor = [UIColor darkGrayColor];
-        messageLabel.numberOfLines = 0;
-        messageLabel.textAlignment = NSTextAlignmentCenter;
-        [messageLabel sizeToFit];
-        
-        _updatesTbl.backgroundView = messageLabel;
-    }
-    
-    [_updatesTbl reloadData];
+        [self setTableDimensions];
+    }];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{

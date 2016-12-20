@@ -16,6 +16,7 @@
 @property (strong, nonatomic) IBOutlet UITableView *updatesTbl;
 
 @property NSMutableArray *jobs;
+@property NSMutableArray *myJobs;
 @property NSMutableArray *updates;
 
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;

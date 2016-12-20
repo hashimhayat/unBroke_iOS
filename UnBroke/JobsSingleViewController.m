@@ -10,6 +10,7 @@
 #import "JobEntryTableViewCell.h"
 #import "JobDetailsTableViewCell.h"
 #import "JobResponseTableViewCell.h"
+#import "Dashboard.h"
 
 @import Firebase;
 
@@ -22,10 +23,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    _accepted = false;
     self.ref = [[FIRDatabase database] reference];
     
     FIRUser *user = [FIRAuth auth].currentUser;
     FIRDatabaseReference *applicantRef = [[[_ref child:@"jobs"] child:_job[@"key"]] child:@"applicants"];
+    
     [applicantRef observeEventType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
         _applied = NO;
         NSArray *applicants = snapshot.value;
@@ -37,6 +40,20 @@
             }
         }
     }];
+    
+    FIRDatabaseReference *matchedRef = [[[_ref child:@"jobs"] child:_job[@"key"]] child:@"matched"];
+    FIRDatabaseReference *matchedUserRef = [[[_ref child:@"jobs"] child:_job[@"key"]] child:@"matchedUserID"];
+    
+    [matchedRef observeEventType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+        if([(NSString *)snapshot.value isEqualToString:@"yes"]){
+            [matchedUserRef observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+                if([(NSString *)snapshot.value isEqualToString:user.uid]){
+                    _accepted = YES;
+                    [_tableView reloadData];
+                }
+            }];
+        }
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -44,15 +61,17 @@
 }
 
 - (IBAction)apply:(id)sender {
-    FIRUser *user = [FIRAuth auth].currentUser;
-    FIRDatabaseReference *jobRef = [[_ref child:@"jobs"] child:_job[@"key"]];
-    FIRDatabaseReference *applicantRef = [jobRef child:@"applicants"];
-    
-    [applicantRef observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
-        NSMutableArray *applicants = snapshot.value;
-        [applicants addObject:user.uid];
-        [jobRef updateChildValues:@{@"applicants": applicants}];
-    }];
+    if(_accepted == NO){
+        FIRUser *user = [FIRAuth auth].currentUser;
+        FIRDatabaseReference *jobRef = [[_ref child:@"jobs"] child:_job[@"key"]];
+        FIRDatabaseReference *applicantRef = [jobRef child:@"applicants"];
+        
+        [applicantRef observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+            NSMutableArray *applicants = snapshot.value;
+            [applicants addObject:user.uid];
+            [jobRef updateChildValues:@{@"applicants": applicants}];
+        }];
+    }
 }
 
 /*
@@ -83,7 +102,7 @@
         cell.name.text = [_job objectForKey:@"name"];
         cell.category.text = [_job objectForKey:@"category"];
         cell.salary.text = [_job objectForKey:@"salary"];
-        cell.imageView.image = [UIImage imageNamed:[self getCategoryImageName:[_job objectForKey:@"category"]]];
+        cell.cellImageView.image = [UIImage imageNamed:[self getCategoryImageName:[_job objectForKey:@"category"]]];
         cell.cellImageView.layer.cornerRadius = 7;
         
         return cell;
@@ -103,18 +122,30 @@
         return cell;
         
     } else {
-        if(_applied){
-            NSString *cellIdentifier = @"applied";
-            JobResponseTableViewCell *cell = (JobResponseTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-            
-            if (cell == nil)
-                cell = [[JobResponseTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-            
-            cell.btn.enabled = NO;
-            
-            return cell;
+        if(_accepted == NO){
+            if(_applied){
+                NSString *cellIdentifier = @"applied";
+                JobResponseTableViewCell *cell = (JobResponseTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+                
+                if (cell == nil)
+                    cell = [[JobResponseTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+                
+                cell.btn.enabled = NO;
+                
+                return cell;
+            } else {
+                NSString *cellIdentifier = @"apply";
+                JobResponseTableViewCell *cell = (JobResponseTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+                
+                if (cell == nil)
+                    cell = [[JobResponseTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+                
+                cell.btn.enabled = YES;
+                
+                return cell;
+            }
         } else {
-            NSString *cellIdentifier = @"apply";
+            NSString *cellIdentifier = @"accepted";
             JobResponseTableViewCell *cell = (JobResponseTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
             
             if (cell == nil)
@@ -191,6 +222,14 @@
         retVal = @"teaching";
     }
     return retVal;
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if ([[segue identifier] isEqualToString:@"message"]){
+        UINavigationController *destViewController = segue.destinationViewController;
+        Dashboard *targetController = [destViewController viewControllers][0];
+        [targetController.tabBarController setSelectedIndex:3];
+    }
 }
 
 @end

@@ -1,14 +1,14 @@
 //
-//  LastJobsTableViewCell.h
-//  UnBroke
+//  LatestThreeJobsTableViewCell.h
+//  
 //
-//  Created by Shuaib Jewon on 12/11/16.
-//  Copyright © 2016 nyu.edu. All rights reserved.
+//  Created by Shuaib Jewon on 12/20/16.
+//
 //
 
 #import <UIKit/UIKit.h>
 
-@interface LastJobsTableViewCell : UITableViewCell
+@interface LatestThreeJobsTableViewCell : UITableViewCell
 
 @property (strong, nonatomic) IBOutlet UIImageView *entryOneImageView;
 @property (strong, nonatomic) IBOutlet UILabel *entryOneLabel;

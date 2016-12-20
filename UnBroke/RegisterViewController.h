@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
+
 
 @import Firebase;
 
@@ -23,5 +25,7 @@
 @property (strong, nonatomic) UITextField *activeField;
 
 @property (strong, nonatomic) FIRDatabaseReference *ref;
+
+@property AVAudioPlayer *audioPlayer;
 
 @end

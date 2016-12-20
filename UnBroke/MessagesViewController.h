@@ -8,10 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
+@import Firebase;
+
 @interface MessagesViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
-@property (copy,nonatomic) NSArray *identifiers;
-@property (copy,nonatomic) NSArray *defaultVal;
-@property (copy,nonatomic) NSArray *profilePic;
+@property NSString *applicantID;
+@property NSString *toUser;
+@property NSString *convoID;
+@property NSString *jobName;
+@property NSMutableArray *data;
+
+@property (strong, nonatomic) IBOutlet UITableView *tableView;
+@property (strong, nonatomic) FIRDatabaseReference *ref;
 
 @end

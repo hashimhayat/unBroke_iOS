@@ -17,6 +17,10 @@
     [super viewDidLoad];
     [self configureLayout];
     [self registerForKeyboardNotifications];
+    
+    NSString *path = [NSString stringWithFormat:@"%@/slide-paper.aif", [[NSBundle mainBundle] resourcePath]];
+    NSURL *soundUrl = [NSURL fileURLWithPath:path];
+    _audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:soundUrl error:nil];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -70,6 +74,8 @@ NSInteger userID;
     //Firebase will validate email address format
     if(errorMsg){
         [self showAlertWithMessage:errorMsg];
+        [spinner stopAnimating];
+        [overlay removeFromSuperview];
     } else {
         [[FIRAuth auth] createUserWithEmail: _emailTextField.text
                                    password: _pwdTextField.text
@@ -78,7 +84,7 @@ NSInteger userID;
                                          [self showAlertWithMessage:[error localizedDescription]];
                                      else
                                          [self performSegueWithIdentifier:@"signedUp" sender:self];
-                                     
+                                     [_audioPlayer play];
                                      [spinner stopAnimating];
                                      [overlay removeFromSuperview];
                                  }

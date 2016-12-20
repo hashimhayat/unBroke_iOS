@@ -7,17 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2019191E1DFDF9890056216F /* LastJobsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2019191D1DFDF9890056216F /* LastJobsTableViewCell.m */; };
 		201919211DFDF9940056216F /* NotificationsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 201919201DFDF9940056216F /* NotificationsTableViewCell.m */; };
-		201919241DFDF9B80056216F /* LatestJobUpdatesTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 201919231DFDF9B80056216F /* LatestJobUpdatesTableViewCell.m */; };
 		201919271DFE09FC0056216F /* JobResponseTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 201919261DFE09FC0056216F /* JobResponseTableViewCell.m */; };
 		201919291DFE1BED0056216F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 201919281DFE1BED0056216F /* GoogleService-Info.plist */; };
 		202686E71DFE7B880030A46B /* ApplicantNameTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 202686E61DFE7B880030A46B /* ApplicantNameTableViewCell.m */; };
+		2061614A1E068E5200010223 /* matchedApplicantNameTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 206161491E068E5200010223 /* matchedApplicantNameTableViewCell.m */; };
 		207327E81DF5425B006B6A47 /* ThreadEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 207327E71DF5425B006B6A47 /* ThreadEntry.m */; };
 		207327EB1DF5476B006B6A47 /* ReceiverEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 207327EA1DF5476B006B6A47 /* ReceiverEntry.m */; };
 		207327EE1DF54777006B6A47 /* SenderEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 207327ED1DF54777006B6A47 /* SenderEntry.m */; };
 		207327F11DF558A0006B6A47 /* TypicalTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 207327F01DF558A0006B6A47 /* TypicalTableViewCell.m */; };
 		207327F41DF558E2006B6A47 /* profilePictureCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 207327F31DF558E2006B6A47 /* profilePictureCell.m */; };
+		209E7D951DFECD9E000C4031 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 209E7D941DFECD9E000C4031 /* AVFoundation.framework */; };
+		209E7D9E1DFECDCA000C4031 /* slide-magic.aif in Resources */ = {isa = PBXBuildFile; fileRef = 209E7D981DFECDCA000C4031 /* slide-magic.aif */; };
+		209E7D9F1DFECDCA000C4031 /* slide-metal.aif in Resources */ = {isa = PBXBuildFile; fileRef = 209E7D991DFECDCA000C4031 /* slide-metal.aif */; };
+		209E7DA01DFECDCA000C4031 /* slide-network.aif in Resources */ = {isa = PBXBuildFile; fileRef = 209E7D9A1DFECDCA000C4031 /* slide-network.aif */; };
+		209E7DA11DFECDCA000C4031 /* slide-paper.aif in Resources */ = {isa = PBXBuildFile; fileRef = 209E7D9B1DFECDCA000C4031 /* slide-paper.aif */; };
+		209E7DA21DFECDCA000C4031 /* slide-rock.aif in Resources */ = {isa = PBXBuildFile; fileRef = 209E7D9C1DFECDCA000C4031 /* slide-rock.aif */; };
+		209E7DA31DFECDCA000C4031 /* slide-scissors.aif in Resources */ = {isa = PBXBuildFile; fileRef = 209E7D9D1DFECDCA000C4031 /* slide-scissors.aif */; };
+		20A4FC241E09704500CF5FAD /* LatestJobUpdatesTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 20A4FC231E09704500CF5FAD /* LatestJobUpdatesTableViewCell.m */; };
+		20A4FC271E0970A800CF5FAD /* LatestThreeJobsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 20A4FC261E0970A800CF5FAD /* LatestThreeJobsTableViewCell.m */; };
 		20DBFF151DE38CA7002E0675 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 20DBFF141DE38CA7002E0675 /* main.m */; };
 		20DBFF181DE38CA7002E0675 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 20DBFF171DE38CA7002E0675 /* AppDelegate.m */; };
 		20DBFF1B1DE38CA7002E0675 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20DBFF1A1DE38CA7002E0675 /* ViewController.m */; };
@@ -44,17 +52,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2019191C1DFDF9890056216F /* LastJobsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LastJobsTableViewCell.h; sourceTree = "<group>"; };
-		2019191D1DFDF9890056216F /* LastJobsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LastJobsTableViewCell.m; sourceTree = "<group>"; };
 		2019191F1DFDF9940056216F /* NotificationsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationsTableViewCell.h; sourceTree = "<group>"; };
 		201919201DFDF9940056216F /* NotificationsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationsTableViewCell.m; sourceTree = "<group>"; };
-		201919221DFDF9B80056216F /* LatestJobUpdatesTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LatestJobUpdatesTableViewCell.h; sourceTree = "<group>"; };
-		201919231DFDF9B80056216F /* LatestJobUpdatesTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LatestJobUpdatesTableViewCell.m; sourceTree = "<group>"; };
 		201919251DFE09FC0056216F /* JobResponseTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobResponseTableViewCell.h; sourceTree = "<group>"; };
 		201919261DFE09FC0056216F /* JobResponseTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobResponseTableViewCell.m; sourceTree = "<group>"; };
 		201919281DFE1BED0056216F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		202686E51DFE7B880030A46B /* ApplicantNameTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplicantNameTableViewCell.h; sourceTree = "<group>"; };
 		202686E61DFE7B880030A46B /* ApplicantNameTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplicantNameTableViewCell.m; sourceTree = "<group>"; };
+		206161481E068E5200010223 /* matchedApplicantNameTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = matchedApplicantNameTableViewCell.h; sourceTree = "<group>"; };
+		206161491E068E5200010223 /* matchedApplicantNameTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = matchedApplicantNameTableViewCell.m; sourceTree = "<group>"; };
 		207327E61DF5425B006B6A47 /* ThreadEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadEntry.h; sourceTree = "<group>"; };
 		207327E71DF5425B006B6A47 /* ThreadEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThreadEntry.m; sourceTree = "<group>"; };
 		207327E91DF5476B006B6A47 /* ReceiverEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReceiverEntry.h; sourceTree = "<group>"; };
@@ -65,6 +71,17 @@
 		207327F01DF558A0006B6A47 /* TypicalTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TypicalTableViewCell.m; sourceTree = "<group>"; };
 		207327F21DF558E2006B6A47 /* profilePictureCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = profilePictureCell.h; sourceTree = "<group>"; };
 		207327F31DF558E2006B6A47 /* profilePictureCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = profilePictureCell.m; sourceTree = "<group>"; };
+		209E7D941DFECD9E000C4031 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		209E7D981DFECDCA000C4031 /* slide-magic.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = "slide-magic.aif"; sourceTree = "<group>"; };
+		209E7D991DFECDCA000C4031 /* slide-metal.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = "slide-metal.aif"; sourceTree = "<group>"; };
+		209E7D9A1DFECDCA000C4031 /* slide-network.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = "slide-network.aif"; sourceTree = "<group>"; };
+		209E7D9B1DFECDCA000C4031 /* slide-paper.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = "slide-paper.aif"; sourceTree = "<group>"; };
+		209E7D9C1DFECDCA000C4031 /* slide-rock.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = "slide-rock.aif"; sourceTree = "<group>"; };
+		209E7D9D1DFECDCA000C4031 /* slide-scissors.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = "slide-scissors.aif"; sourceTree = "<group>"; };
+		20A4FC221E09704000CF5FAD /* LatestJobUpdatesTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LatestJobUpdatesTableViewCell.h; sourceTree = "<group>"; };
+		20A4FC231E09704500CF5FAD /* LatestJobUpdatesTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LatestJobUpdatesTableViewCell.m; sourceTree = "<group>"; };
+		20A4FC251E0970A800CF5FAD /* LatestThreeJobsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LatestThreeJobsTableViewCell.h; sourceTree = "<group>"; };
+		20A4FC261E0970A800CF5FAD /* LatestThreeJobsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LatestThreeJobsTableViewCell.m; sourceTree = "<group>"; };
 		20DBFF101DE38CA7002E0675 /* UnBroke.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnBroke.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		20DBFF141DE38CA7002E0675 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		20DBFF161DE38CA7002E0675 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -117,6 +134,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				209E7D951DFECD9E000C4031 /* AVFoundation.framework in Frameworks */,
 				8596AAF2BBB92CB60460A01F /* libPods-UnBroke.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -136,6 +154,19 @@
 				20DBFF241DE38CA7002E0675 /* Info.plist */,
 			);
 			name = Others;
+			sourceTree = "<group>";
+		};
+		209E7D971DFECDCA000C4031 /* slides */ = {
+			isa = PBXGroup;
+			children = (
+				209E7D981DFECDCA000C4031 /* slide-magic.aif */,
+				209E7D991DFECDCA000C4031 /* slide-metal.aif */,
+				209E7D9A1DFECDCA000C4031 /* slide-network.aif */,
+				209E7D9B1DFECDCA000C4031 /* slide-paper.aif */,
+				209E7D9C1DFECDCA000C4031 /* slide-rock.aif */,
+				209E7D9D1DFECDCA000C4031 /* slide-scissors.aif */,
+			);
+			path = slides;
 			sourceTree = "<group>";
 		};
 		20DBFF071DE38CA7002E0675 = {
@@ -159,6 +190,7 @@
 		20DBFF121DE38CA7002E0675 /* UnBroke */ = {
 			isa = PBXGroup;
 			children = (
+				209E7D971DFECDCA000C4031 /* slides */,
 				20DBFF1F1DE38CA7002E0675 /* Assets.xcassets */,
 				20E3B99D1DF63A2900F7DBD0 /* Authentication */,
 				20E3B9B01DF7613D00F7DBD0 /* Dashboard */,
@@ -243,6 +275,8 @@
 				20E26A401DEE845A0026A353 /* JobsPostViewController.m */,
 				20DE37221DFC45CB0001ADAF /* MyJobsSingleViewController.h */,
 				20DE37231DFC45CB0001ADAF /* MyJobsSingleViewController.m */,
+				206161481E068E5200010223 /* matchedApplicantNameTableViewCell.h */,
+				206161491E068E5200010223 /* matchedApplicantNameTableViewCell.m */,
 				201919251DFE09FC0056216F /* JobResponseTableViewCell.h */,
 				201919261DFE09FC0056216F /* JobResponseTableViewCell.m */,
 			);
@@ -265,12 +299,12 @@
 			children = (
 				20E3B9AD1DF7613600F7DBD0 /* Dashboard.h */,
 				20E3B9AE1DF7613600F7DBD0 /* Dashboard.m */,
-				2019191C1DFDF9890056216F /* LastJobsTableViewCell.h */,
-				2019191D1DFDF9890056216F /* LastJobsTableViewCell.m */,
 				2019191F1DFDF9940056216F /* NotificationsTableViewCell.h */,
 				201919201DFDF9940056216F /* NotificationsTableViewCell.m */,
-				201919221DFDF9B80056216F /* LatestJobUpdatesTableViewCell.h */,
-				201919231DFDF9B80056216F /* LatestJobUpdatesTableViewCell.m */,
+				20A4FC221E09704000CF5FAD /* LatestJobUpdatesTableViewCell.h */,
+				20A4FC231E09704500CF5FAD /* LatestJobUpdatesTableViewCell.m */,
+				20A4FC251E0970A800CF5FAD /* LatestThreeJobsTableViewCell.h */,
+				20A4FC261E0970A800CF5FAD /* LatestThreeJobsTableViewCell.m */,
 			);
 			name = Dashboard;
 			sourceTree = "<group>";
@@ -287,6 +321,7 @@
 		F3D9D3CBCA37711F5725F78F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				209E7D941DFECD9E000C4031 /* AVFoundation.framework */,
 				CE6AFB976611D048E7BA5701 /* libPods-UnBroke.a */,
 			);
 			name = Frameworks;
@@ -354,10 +389,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				209E7D9F1DFECDCA000C4031 /* slide-metal.aif in Resources */,
 				20DBFF231DE38CA7002E0675 /* LaunchScreen.storyboard in Resources */,
 				201919291DFE1BED0056216F /* GoogleService-Info.plist in Resources */,
+				209E7DA11DFECDCA000C4031 /* slide-paper.aif in Resources */,
+				209E7DA21DFECDCA000C4031 /* slide-rock.aif in Resources */,
+				209E7D9E1DFECDCA000C4031 /* slide-magic.aif in Resources */,
 				20DBFF201DE38CA7002E0675 /* Assets.xcassets in Resources */,
+				209E7DA31DFECDCA000C4031 /* slide-scissors.aif in Resources */,
 				20DBFF1E1DE38CA7002E0675 /* Main.storyboard in Resources */,
+				209E7DA01DFECDCA000C4031 /* slide-network.aif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -436,15 +477,16 @@
 				20E3B9AF1DF7613600F7DBD0 /* Dashboard.m in Sources */,
 				201919271DFE09FC0056216F /* JobResponseTableViewCell.m in Sources */,
 				20E3B9B31DF8D6F600F7DBD0 /* titleTableViewCell.m in Sources */,
+				2061614A1E068E5200010223 /* matchedApplicantNameTableViewCell.m in Sources */,
+				20A4FC241E09704500CF5FAD /* LatestJobUpdatesTableViewCell.m in Sources */,
 				20E3B9A31DF63A8300F7DBD0 /* RegisterViewController.m in Sources */,
+				20A4FC271E0970A800CF5FAD /* LatestThreeJobsTableViewCell.m in Sources */,
 				207327F41DF558E2006B6A47 /* profilePictureCell.m in Sources */,
 				207327E81DF5425B006B6A47 /* ThreadEntry.m in Sources */,
 				20E26A441DEE86740026A353 /* MessagesViewController.m in Sources */,
 				207327EB1DF5476B006B6A47 /* ReceiverEntry.m in Sources */,
-				201919241DFDF9B80056216F /* LatestJobUpdatesTableViewCell.m in Sources */,
 				20DE37211DFBDD510001ADAF /* JobDetailsTableViewCell.m in Sources */,
 				202686E71DFE7B880030A46B /* ApplicantNameTableViewCell.m in Sources */,
-				2019191E1DFDF9890056216F /* LastJobsTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -570,6 +612,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = nyu.UnBroke;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos10.1;
 			};
 			name = Debug;
 		};
@@ -583,6 +626,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = nyu.UnBroke;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos10.1;
 			};
 			name = Release;
 		};

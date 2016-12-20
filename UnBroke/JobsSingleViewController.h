@@ -16,6 +16,7 @@
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 
 @property BOOL applied;
+@property BOOL accepted;
 @property (nonatomic, strong) NSDictionary *job;
 
 @property (strong, nonatomic) FIRDatabaseReference *ref;

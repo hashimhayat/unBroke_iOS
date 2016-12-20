@@ -8,19 +8,21 @@
 
 #import <UIKit/UIKit.h>
 
+@import Firebase;
+
 @interface Dashboard : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
-@property (strong, nonatomic) IBOutlet UITableView *notificationsTbl;
 @property (strong, nonatomic) IBOutlet UITableView *postingsTbl;
 @property (strong, nonatomic) IBOutlet UITableView *updatesTbl;
 
+@property NSMutableArray *jobs;
 @property NSMutableArray *updates;
 
-@property UIImage *entryOneImageCat;
-@property NSString *entryOneData;
-@property UIImage *entryTwoImageCat;
-@property NSString *entryTwoData;
-@property UIImage *entryThreeImageCat;
-@property NSString *entryThreeData;
+@property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
+
+@property (strong, nonatomic) FIRDatabaseReference *ref;
+
+@property BOOL showPosting;
+@property BOOL showNotifications;
 
 @end

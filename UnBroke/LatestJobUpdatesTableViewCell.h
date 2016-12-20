@@ -10,4 +10,8 @@
 
 @interface LatestJobUpdatesTableViewCell : UITableViewCell
 
+
+@property (strong, nonatomic) IBOutlet UILabel *label;
+
+
 @end

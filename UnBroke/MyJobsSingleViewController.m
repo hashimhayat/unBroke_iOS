@@ -10,6 +10,9 @@
 #import "JobEntryTableViewCell.h"
 #import "JobDetailsTableViewCell.h"
 #import "ApplicantNameTableViewCell.h"
+#import "matchedApplicantNameTableViewCell.h"
+#import "MessagesThreadViewController.h"
+#import "Dashboard.h"
 
 @import Firebase;
 
@@ -24,16 +27,28 @@
     [super viewDidLoad];
     
     self.ref = [[FIRDatabase database] reference];
-    
+    _matchFound = NO;
+    _matchedUserID = @"nil";
     _jobApplicants = [[NSMutableArray alloc] init];
     
     FIRDatabaseReference *applicantRef = [[[_ref child:@"jobs"] child:_job[@"key"]] child:@"applicants"];
-    NSLog(@"it is bs %@", applicantRef);
     [applicantRef observeEventType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
         NSArray *applicants = snapshot.value;
-        NSLog(@"%@", applicants);
         _jobApplicants = [applicants mutableCopy];
         [_tableView reloadData];
+    }];
+    
+    FIRDatabaseReference *matchedRef = [[[_ref child:@"jobs"] child:_job[@"key"]] child:@"matched"];
+    FIRDatabaseReference *matchedUserRef = [[[_ref child:@"jobs"] child:_job[@"key"]] child:@"matchedUserID"];
+    
+    [matchedRef observeEventType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+        if([(NSString *)snapshot.value isEqualToString:@"yes"]){
+            _matchFound = YES;
+            [matchedUserRef observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+                _matchedUserID = snapshot.value;
+                [_tableView reloadData];
+            }];
+        }
     }];
 }
 
@@ -48,7 +63,10 @@
  */
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 3 + [_jobApplicants count];
+    if(_matchFound == NO)
+        return 3 + [_jobApplicants count];
+    else
+        return 5;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -76,7 +94,7 @@
         cell.name.text = [NSString stringWithFormat:@"%@",[_job objectForKey:@"name"]];
         cell.category.text = [_job objectForKey:@"category"];
         cell.salary.text = [NSString stringWithFormat:@"$%@/hr", [_job objectForKey:@"salary"]];
-        cell.imageView.image = [UIImage imageNamed:[self getCategoryImageName:[_job objectForKey:@"category"]]];
+        cell.cellImageView.image = [UIImage imageNamed:[self getCategoryImageName:[_job objectForKey:@"category"]]];
         cell.cellImageView.layer.cornerRadius = 7;
         
         return cell;
@@ -95,34 +113,134 @@
         return cell;
         
     } else if (indexPath.row == 2) {
-        NSString *cellIdentifier = @"applicantList";
-        UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-        
-        if (cell == nil)
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-        
-        return cell;
+        if(_matchFound == NO){
+            NSString *cellIdentifier = @"applicantList";
+            UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+            
+            if (cell == nil)
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+            
+            return cell;
+        } else {
+            NSString *cellIdentifier = @"matchFound";
+            UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+            
+            if (cell == nil)
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+            
+            return cell;
+        }
     } else {
-        NSString *cellIdentifier = @"applicantName";
-        ApplicantNameTableViewCell *cell = (ApplicantNameTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        if(_matchFound == NO){
+            NSString *cellIdentifier = @"applicantName";
+            ApplicantNameTableViewCell *cell = (ApplicantNameTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+            
+            if (cell == nil)
+                cell = [[ApplicantNameTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+            
+            cell.acceptBtn.layer.cornerRadius = 7;
+            cell.rejectBtn.layer.cornerRadius = 7;
+            
+            FIRDatabaseReference *userRef = [[_ref child:@"users"] child:[_jobApplicants objectAtIndex:(indexPath.row - 3)]] /*child:@"firstName"*/;
+    
+            [userRef observeEventType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+                NSString *name = [[NSString alloc] init];
+                NSString *fname = [[NSString alloc] init];
+                NSString *lname = [[NSString alloc] init];
         
-        if (cell == nil)
-            cell = [[ApplicantNameTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-        
-        cell.acceptBtn.layer.cornerRadius = 7;
-        cell.rejectBtn.layer.cornerRadius = 7;
-        
-        FIRDatabaseReference *userRef = [[[_ref child:@"users"] child:[_jobApplicants objectAtIndex:(indexPath.row - 3)]] child:@"firstName"];
-        
-        [userRef observeEventType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
-            if(snapshot.value != [NSNull null]){
-                cell.applicantName.text = snapshot.value;
-            } else {
-                cell.applicantName.text = [_jobApplicants objectAtIndex:(indexPath.row - 3)];
-            }
-         }];
-        
-        return cell;
+                for (FIRDataSnapshot *child in snapshot.children) {
+                    if(child.value != [NSNull null] && [child.key isEqualToString:@"firstName"])
+                        fname = child.value;
+                    if(child.value != [NSNull null] && [child.key isEqualToString:@"lastName"])
+                        lname = child.value;
+                }
+                if(![fname isEqualToString:@""])
+                    if(![lname isEqualToString:@""])
+                        name = [[NSString alloc] initWithFormat:@"%@ %@", fname, lname];
+                    else
+                        name = [[NSString alloc] initWithFormat:@"%@", fname];
+                else if (![lname isEqualToString:@""])
+                    name = [[NSString alloc] initWithFormat:@"%@", lname];
+                
+                if(![name isEqualToString:@""]){
+                    cell.applicantName.text = name;
+                } else {
+                    cell.applicantName.text = [_jobApplicants objectAtIndex:(indexPath.row - 3)];
+                }
+                cell.jobID = _job[@"key"];
+                cell.userID = [_jobApplicants objectAtIndex:(indexPath.row - 3)];
+                cell.jobName = _job[@"name"];
+                
+                FIRUser *user = [FIRAuth auth].currentUser;
+                [[[_ref child:@"users"] child:user.uid] observeEventType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+                    NSString *name = [[NSString alloc] init];
+                    NSString *fname = [[NSString alloc] init];
+                    NSString *lname = [[NSString alloc] init];
+                    
+                    for (FIRDataSnapshot *child in snapshot.children) {
+                        if(child.value != [NSNull null] && [child.key isEqualToString:@"firstName"])
+                            fname = child.value;
+                        if(child.value != [NSNull null] && [child.key isEqualToString:@"lastName"])
+                            lname = child.value;
+                    }
+                    if(![fname isEqualToString:@""])
+                        if(![lname isEqualToString:@""])
+                            name = [[NSString alloc] initWithFormat:@"%@ %@", fname, lname];
+                        else
+                            name = [[NSString alloc] initWithFormat:@"%@", fname];
+                        else if (![lname isEqualToString:@""])
+                            name = [[NSString alloc] initWithFormat:@"%@", lname];
+                    
+                    if(![name isEqualToString:@""]){
+                        cell.creatorName = name;
+                    } else {
+                        cell.creatorName = [_jobApplicants objectAtIndex:(indexPath.row - 3)];
+                    }
+                }];
+                
+             }];
+            
+            return cell;
+        } else {
+            NSString *cellIdentifier = @"matchedApplicantName";
+            matchedApplicantNameTableViewCell *cell = (matchedApplicantNameTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+            
+            if (cell == nil)
+                cell = [[matchedApplicantNameTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+            
+            cell.contactBtn.layer.cornerRadius = 7;
+            
+            FIRDatabaseReference *userRef = [[_ref child:@"users"] child:[_jobApplicants objectAtIndex:(indexPath.row - 3)]] /*child:@"firstName"*/;
+            
+            [userRef observeEventType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+                NSString *name = [[NSString alloc] init];
+                NSString *fname = [[NSString alloc] init];
+                NSString *lname = [[NSString alloc] init];
+                
+                for (FIRDataSnapshot *child in snapshot.children) {
+                    if(child.value != [NSNull null] && [child.key isEqualToString:@"firstName"])
+                        fname = child.value;
+                    if(child.value != [NSNull null] && [child.key isEqualToString:@"lastName"])
+                        lname = child.value;
+                }
+                if(![fname isEqualToString:@""])
+                    if(![lname isEqualToString:@""])
+                        name = [[NSString alloc] initWithFormat:@"%@ %@", fname, lname];
+                    else
+                        name = [[NSString alloc] initWithFormat:@"%@", fname];
+                    else if (![lname isEqualToString:@""])
+                        name = [[NSString alloc] initWithFormat:@"%@", lname];
+                
+                if(![name isEqualToString:@""]){
+                    cell.applicantName.text = name;
+                } else {
+                    cell.applicantName.text = [_jobApplicants objectAtIndex:(indexPath.row - 3)];
+                }
+                cell.userID = [_jobApplicants objectAtIndex:(indexPath.row - 3)];
+            }];
+            
+            return cell;
+        }
     }
 }
 
@@ -193,5 +311,12 @@
     return retVal;
 }
 
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if ([[segue identifier] isEqualToString:@"message"]){
+        UINavigationController *destViewController = segue.destinationViewController;
+        Dashboard *targetController = [destViewController viewControllers][0];
+        [targetController.tabBarController setSelectedIndex:3];
+    }
+}
 
 @end

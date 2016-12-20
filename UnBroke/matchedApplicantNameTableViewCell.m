@@ -1,14 +1,14 @@
 //
-//  LastJobsTableViewCell.m
+//  matchedApplicantNameTableViewCell.m
 //  UnBroke
 //
-//  Created by Shuaib Jewon on 12/11/16.
+//  Created by Shuaib Jewon on 12/18/16.
 //  Copyright © 2016 nyu.edu. All rights reserved.
 //
 
-#import "LastJobsTableViewCell.h"
+#import "matchedApplicantNameTableViewCell.h"
 
-@implementation LastJobsTableViewCell
+@implementation matchedApplicantNameTableViewCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];

@@ -95,7 +95,7 @@
             _tableView.backgroundView = messageLabel;
         }
         
-        [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+        [_tableView reloadData];
         
         [spinner stopAnimating];
         [overlay removeFromSuperview];
@@ -243,5 +243,6 @@
     }
     return retVal;
 }
+
 
 @end

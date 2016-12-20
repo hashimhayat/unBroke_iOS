@@ -19,6 +19,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    _ref = [[FIRDatabase database] reference];
     [self loadDataFirebase];
     _filterCategory = @"";
 }
@@ -49,14 +50,15 @@
     [self.view addSubview:overlay];
     [spinner startAnimating];
     
-    _ref = [[FIRDatabase database] reference];
-    
     _data = [[NSMutableArray alloc] init];
     _originalData = [[NSMutableArray alloc] init];
     
     FIRUser *user = [FIRAuth auth].currentUser;
     FIRDatabaseReference *jobData = [_ref child:@"jobs"];
     [jobData observeEventType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+        [spinner stopAnimating];
+        [overlay removeFromSuperview];
+        
         NSDictionary *jobs = snapshot.value;
         _data = [[NSMutableArray alloc] init];
         _originalData = [[NSMutableArray alloc] init];
@@ -90,6 +92,7 @@
             _data = [sortedByDate mutableCopy];
         }
         
+        _tableView.backgroundView = [[UIView alloc] init];
         if([jobs isEqual:[NSNull null]] || _data.count == 0){
             UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
         
@@ -103,9 +106,6 @@
         }
 
         [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
-        
-        [spinner stopAnimating];
-        [overlay removeFromSuperview];
     }];
 }
 

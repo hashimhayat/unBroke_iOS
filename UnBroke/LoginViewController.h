@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
 
 @interface LoginViewController : UIViewController
 
@@ -19,5 +20,7 @@
 
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) UITextField *activeField;
+
+@property AVAudioPlayer *audioPlayer;
 
 @end

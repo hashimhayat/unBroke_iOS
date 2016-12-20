@@ -244,7 +244,11 @@
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender{
     if ([identifier isEqualToString:@"save"]){
-        //add validation
+        if(_jobNameTextField.text.length < 1 || _descriptionFieldEdit.text.length < 1 || _salaryText.text.length < 1){
+            [self showAlertWithMessage:@"All fields need to be filled in"];
+            return false;
+        }
+        
         
         FIRUser *user = [FIRAuth auth].currentUser;
         FIRDatabaseReference *newEntry = [[_ref child:@"jobs"] childByAutoId];
@@ -259,10 +263,11 @@
                               @"timestamp" : [FIRServerValue timestamp],
                               @"key" : newEntry.key,
                               @"applicants" : applicants,
+                              @"matched" : @"no",
+                              @"matchedUserID" : @"nil",
         };
         [newEntry setValue:job];
     }
-    
     return true;
 }
 

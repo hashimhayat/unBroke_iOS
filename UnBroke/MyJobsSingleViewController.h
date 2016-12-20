@@ -19,6 +19,9 @@
 @property (nonatomic, strong) NSDictionary *job;
 @property (nonatomic, strong) NSMutableArray *jobApplicants;
 
+@property BOOL matchFound;
+@property NSString *matchedUserID;
+
 @property (strong, nonatomic) FIRDatabaseReference *ref;
 
 @end

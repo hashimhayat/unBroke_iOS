@@ -7,74 +7,62 @@
 //
 
 #import "Dashboard.h"
+#import "LatestThreeJobsTableViewCell.h"
+#import "LatestJobUpdatesTableViewCell.h"
+
+
+@import Firebase;
 
 @interface Dashboard ()
 
 @end
 
-typedef void (^ IteratorBlock)(id object);
-
-extern NSInteger userID;
-extern NSString *apiUrl;
-extern NSInteger cornerRadius;
-
 @implementation Dashboard
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    _ref = [[FIRDatabase database] reference];
     
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(deviceOrientationDidChangeNotification:)
-     name:UIDeviceOrientationDidChangeNotification
-     object:nil];
+    _postingsTbl.layer.cornerRadius = 7;
+    _updatesTbl.layer.cornerRadius = 7;
     
-    // Do any additional setup after loading the view.
-    _notificationsTbl.layer.cornerRadius = cornerRadius;
-    _postingsTbl.layer.cornerRadius = cornerRadius;
-    _updatesTbl.layer.cornerRadius = cornerRadius;
+    _showPosting = YES;
+    _showNotifications = YES;
     
-    //set size of tableview to content size
-    dispatch_async(dispatch_get_main_queue(), ^{
-        //[self loadNotif];
-        //[self loadPostings];
-        _updates = [[NSMutableArray alloc] init];
-        //[self loadUpdates];
-        
-        [self setDimensions];
-    });
+    [self loadPostings];
 }
 
-- (void)deviceOrientationDidChangeNotification:(NSNotification*)note{
-//    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
-//    switch (orientation){
-//        case UIDeviceOrientationLandscapeLeft:
-//            break;
-//        case UIDeviceOrientationLandscapeRight:
-//            break;
-//        default:
-//            break;
-//    }
-    
-    [self setDimensions];
-    [self.view setNeedsDisplay];
+- (void)viewDidLayoutSubviews{
+    [self setTableDimensions];
 }
 
 //to allow for scrolling
-- (void) setDimensions {
-    CGRect frameNotifications = _notificationsTbl.frame;
+- (void) setTableDimensions{
     CGRect framePostings = _postingsTbl.frame;
     CGRect frameUpdates = _updatesTbl.frame;
     
-    frameNotifications.size.height = _notificationsTbl.contentSize.height;
-    framePostings.size.height = _postingsTbl.contentSize.height;
-    frameUpdates.size.height = _updatesTbl.contentSize.height;
-    framePostings.origin.y = _notificationsTbl.frame.origin.y + frameNotifications.size.height + 20;
+    framePostings.origin.y = self.navigationController.navigationBar.frame.size.height + 20;
+    if(_showPosting)
+        framePostings.size.height = 194;
+    else
+        framePostings.size.height = 40;
     frameUpdates.origin.y = framePostings.origin.y + framePostings.size.height + 20;
+    if(_showNotifications)
+        if(_updates.count == 0)
+            frameUpdates.size.height = 194;
+        else
+            frameUpdates.size.height = 40 + (_updates.count*44);
+    else
+        frameUpdates.size.height = 40;
+    CGFloat contentSizeY = frameUpdates.origin.y + frameUpdates.size.height + 70;
     
-    _notificationsTbl.frame = frameNotifications;
-    _postingsTbl.frame = framePostings;
-    _updatesTbl.frame = frameUpdates;
+    [UIView animateWithDuration:0.5
+                     animations:^{
+                         _postingsTbl.frame = framePostings;
+                         _updatesTbl.frame = frameUpdates;
+                         [_scrollView setContentSize:CGSizeMake(_scrollView.frame.size.width, contentSizeY)];
+                     }
+     ];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -82,91 +70,94 @@ extern NSInteger cornerRadius;
     // Dispose of any resources that can be recreated.
 }
 
-- (void) loadNotif{
-    [self sendPostRequestWithData:[NSString stringWithFormat:@"user_id=%ld",userID]
-                sendPostRequestTo:@"notifications.php"
-                       isAnimated:YES
-                postCustomCommand:^(id object){
-                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                        for (id o in object){
-                            NSDictionary *entry = o;
-                            if(entry != nil){
-                                entry = [entry objectForKey:0];
-                                NSString *percentage = [entry objectForKey:@"percentage"];
-                                if([percentage isEqualToString:@"100"]){
-                                    // do stuff here
-                                }
-                                    
-                            }
-                        }
-                    }];
-                }];
-}
-
 - (void) loadPostings{
-    [self sendPostRequestWithData:[NSString stringWithFormat:@"user_id=%ld",userID]
-                sendPostRequestTo:@"recent_jobs_dash.php"
-                       isAnimated:YES
-                postCustomCommand:^(id object){
-                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                        if([object count] > 0){
-                            NSDictionary *entry = [object objectAtIndex:0];
-                            if(entry != nil){
-                                _entryOneImageCat = [entry objectForKey:@"category"];
-                                _entryOneData = [entry objectForKey:@"title"];
-                            }
-                        }
-                        
-                        if([object count] > 1){
-                            NSDictionary *entry = [object objectAtIndex:1];
-                            if(entry != nil){
-                                _entryTwoImageCat = [entry objectForKey:@"category"];
-                                _entryTwoData = [entry objectForKey:@"title"];
-                            }
-                        }
-                        
-                        if([object count] > 2){
-                            NSDictionary *entry = [object objectAtIndex:2];
-                            if(entry != nil){
-                                _entryThreeImageCat = [entry objectForKey:@"category"];
-                                _entryThreeData = [entry objectForKey:@"title"];
-                            }
-                        }
-                    }];
-                }];
+    FIRUser *user = [FIRAuth auth].currentUser;
+    FIRDatabaseReference *jobData = [_ref child:@"jobs"];
+    [jobData observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+        NSDictionary *jobs = snapshot.value;
+        _jobs = [[NSMutableArray alloc] init];
+        
+        if(![jobs isEqual:[NSNull null]]){
+            for(NSDictionary *entry in jobs){
+                NSDictionary *job = [jobs valueForKeyPath:[NSString stringWithFormat:@"%@",entry]];
+                if(![user.uid isEqualToString:[job objectForKey:@"owner"]]){
+                    [_jobs addObject:job];
+                }
+            }
+            
+            NSArray *sortedByDate = [_jobs sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+                NSString *firstStr = [(NSDictionary *)a objectForKey:@"timestamp"];
+                NSString *secondStr = [(NSDictionary *)b objectForKey:@"timestamp"];
+                NSTimeInterval firstInterval=[firstStr doubleValue];
+                NSTimeInterval secondInterval=[secondStr doubleValue];
+                NSDate *first = [NSDate dateWithTimeIntervalSince1970:firstInterval];
+                NSDate *second = [NSDate dateWithTimeIntervalSince1970:secondInterval];
+                
+                return [first compare:second];
+            }];
+            
+            _jobs = [sortedByDate mutableCopy];
+        }
+        
+        _postingsTbl.backgroundView = [[UIView alloc] init];
+        if(_jobs.count == 0){
+            UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+            
+            messageLabel.text = @"No data is currently available";
+            messageLabel.textColor = [UIColor darkGrayColor];
+            messageLabel.numberOfLines = 0;
+            messageLabel.textAlignment = NSTextAlignmentCenter;
+            [messageLabel sizeToFit];
+            
+            _postingsTbl.backgroundView = messageLabel;
+        }
+        [self loadUpdates];
+        [_postingsTbl reloadData];
+    }];
 }
 
 -(void) loadUpdates{
-    [self sendPostRequestWithData:[NSString stringWithFormat:@"user_id=%ld",userID]
-                sendPostRequestTo:@"recent_jobs_dash.php"
-                       isAnimated:YES
-                postCustomCommand:^(id object){
-                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                        if([object count] > 0){
-                            NSDictionary *entry = [object objectAtIndex:0];
-                            if(entry != nil){
-                                _entryOneImageCat = [entry objectForKey:@"category"];
-                                _entryOneData = [entry objectForKey:@"title"];
-                            }
-                        }
-                        
-                        if([object count] > 1){
-                            NSDictionary *entry = [object objectAtIndex:1];
-                            if(entry != nil){
-                                _entryTwoImageCat = [entry objectForKey:@"category"];
-                                _entryTwoData = [entry objectForKey:@"title"];
-                            }
-                        }
-                        
-                        if([object count] > 2){
-                            NSDictionary *entry = [object objectAtIndex:2];
-                            if(entry != nil){
-                                _entryThreeImageCat = [entry objectForKey:@"category"];
-                                _entryThreeData = [entry objectForKey:@"title"];
-                            }
-                        }
-                    }];
+    FIRUser *user = [FIRAuth auth].currentUser;
+    _updates = [[NSMutableArray alloc] init];
+    
+    for(NSDictionary *job in _jobs){
+        if([job[@"owner"] isEqualToString:user.uid]){
+            if([job[@"matched"] isEqualToString:@"yes"]){
+                [_updates addObject:@{
+                                      @"message": [[NSString alloc] initWithFormat:@"Match found for job %@", job[@"name"]],
+                                      @"status":@"good",
                 }];
+            } else {
+                NSArray *applicants = (NSArray *)job[@"applicants"];
+                if(applicants.count == 1){
+                    [_updates addObject:@{
+                                          @"message": [[NSString alloc] initWithFormat:@"No applicants yet for job %@", job[@"name"]],
+                                          @"status":@"bad",
+                    }];
+                } else {
+                    [_updates addObject:@{
+                                          @"message": [[NSString alloc] initWithFormat:@"%lu possible candidates for job %@", applicants.count, job[@"name"]],
+                                          @"status":@"good",
+                                          }];
+                }
+            }
+        }
+    }
+    
+    _updatesTbl.backgroundView = [[UIView alloc] init];
+    if(_updates.count == 0){
+        UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+        
+        messageLabel.text = @"No data is currently available";
+        messageLabel.textColor = [UIColor darkGrayColor];
+        messageLabel.numberOfLines = 0;
+        messageLabel.textAlignment = NSTextAlignmentCenter;
+        [messageLabel sizeToFit];
+        
+        _updatesTbl.backgroundView = messageLabel;
+    }
+    
+    [_updatesTbl reloadData];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -174,8 +165,8 @@ extern NSInteger cornerRadius;
         //title row
         return 40.0f;
     
-    if (tableView.tag == 2 && indexPath.row == 1)
-        //title row
+    if (tableView.tag == 2 && indexPath.row == 1 && _jobs.count > 0)
+        //postings row
         return 150.0f;
     
     return UITableViewAutomaticDimension;
@@ -190,32 +181,13 @@ extern NSInteger cornerRadius;
         return 2;
     }else if(tableView.tag == 3){
         //job updates
-        return 3;
+        return _updates.count+1;
     }
-    return 0;
+    return 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if(tableView.tag == 1){
-        //notifications
-        if(indexPath.row == 0){
-            NSString *identifier = @"title";
-            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: identifier];
-            if(cell == nil)
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier: identifier];
-            cell.contentView.layer.cornerRadius = 10;
-            return cell;
-        } else {
-            NSString *identifier = @"entry";
-            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-            if(cell == nil)
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier: identifier];
-            cell.contentView.layer.cornerRadius = 10;
-            return cell;
-        }
-        
-        
-    } else if(tableView.tag == 2){
+    if(tableView.tag == 2){
         //postings
         if(indexPath.row == 0){
             NSString *identifier = @"title";
@@ -226,10 +198,39 @@ extern NSInteger cornerRadius;
             return cell;
         } else {
             NSString *identifier = @"entry";
-            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+            LatestThreeJobsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
             if(cell == nil)
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier: identifier];
+                cell = [[LatestThreeJobsTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier: identifier];
             cell.contentView.layer.cornerRadius = 10;
+            
+            cell.entryOneImageView.alpha = 0;
+            cell.entryOneLabel.alpha = 0;
+            cell.entryTwoImageView.alpha = 0;
+            cell.entryTwoLabel.alpha = 0;
+            cell.entryThreeImageView.alpha = 0;
+            cell.entryThreeLabel.alpha = 0;
+            
+            if(_jobs.count > 0){
+                cell.entryOneImageView.alpha = 1;
+                cell.entryOneLabel.alpha = 1;
+                cell.entryOneImageView.image = [UIImage imageNamed:[self getCategoryImageName:_jobs[0][@"category"]]];
+                cell.entryOneLabel.text = _jobs[0][@"name"];
+            }
+            
+            if(_jobs.count > 1){
+                cell.entryTwoImageView.alpha = 1;
+                cell.entryTwoLabel.alpha = 1;
+                cell.entryTwoImageView.image = [UIImage imageNamed:[self getCategoryImageName:_jobs[1][@"category"]]];
+                cell.entryTwoLabel.text = _jobs[1][@"name"];
+            }
+            
+            if(_jobs.count > 2){
+                cell.entryThreeImageView.alpha = 1;
+                cell.entryThreeLabel.alpha = 1;
+                cell.entryThreeImageView.image = [UIImage imageNamed:[self getCategoryImageName:_jobs[2][@"category"]]];
+                cell.entryThreeLabel.text = _jobs[2][@"name"];
+            }
+            
             return cell;
         }
         
@@ -243,19 +244,12 @@ extern NSInteger cornerRadius;
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier: identifier];
             cell.contentView.layer.cornerRadius = 10;
             return cell;
-        } else if(indexPath.row == 1){
-            NSString *identifier = @"good";
-            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+        } else {
+            NSString *identifier = _updates[indexPath.row-1][@"status"];
+            LatestJobUpdatesTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
             if(cell == nil)
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier: identifier];
-            
-            return cell;
-        } else if(indexPath.row == 2){
-            NSString *identifier = @"good2";
-            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-            if(cell == nil)
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier: identifier];
-            
+                cell = [[LatestJobUpdatesTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier: identifier];
+            cell.label.text = _updates[indexPath.row-1][@"message"];
             return cell;
         }
     }
@@ -263,15 +257,22 @@ extern NSInteger cornerRadius;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    if(tableView.tag == 1){
-        //notifications
-        [self.tabBarController setSelectedIndex:4];
-    } else if(tableView.tag == 2){
+    if(tableView.tag == 2){
         //postings
-        [self.tabBarController setSelectedIndex:2];
+        if(indexPath.row == 0){
+            _showPosting = !_showPosting;
+            [self setTableDimensions];
+        } else {
+            [self.tabBarController setSelectedIndex:2];
+        }
     } else if(tableView.tag == 3){
         //job updates
-        [self.tabBarController setSelectedIndex:1];
+        if(indexPath.row == 0){
+            _showNotifications = !_showNotifications;
+            [self setTableDimensions];
+        } else {
+            [self.tabBarController setSelectedIndex:1];
+        }
     }
 }
 
@@ -344,86 +345,6 @@ extern NSInteger cornerRadius;
         [alert addAction:ok];
         [self presentViewController:alert animated:YES completion:nil];
     }];
-}
-
-//Animates and sends a post request with the options of setting a block of stuff to do after response received
--(void) sendPostRequestWithData:(NSString *)postString sendPostRequestTo:(NSString *)fileName isAnimated:(Boolean)animated postCustomCommand:(IteratorBlock)iteratorBlock{
-    
-    //create translucent overlay
-    UIView *overlay = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    [overlay setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.3]];
-    
-    //create a moving spinner and add it to the overlay
-    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    
-    
-    //position spinner in the center of the overlay and animate the appearance of the overlay
-    spinner.center = CGPointMake(self.view.frame.size.width / 2.0, self.view.frame.size.height / 2.0);
-    
-    if(animated){
-        [spinner startAnimating];
-        [overlay addSubview:spinner];
-        
-        //add overlay to view
-        [UIView animateWithDuration:0.5
-                         animations:^{
-                             [self.view addSubview:overlay];
-                             overlay.alpha = 1.0;
-                         }
-         ];
-    }
-    
-    //wait for 0.3 seconds before sending post request for aesthetic reasons - overlay and spinner shown for > 0.3 seconds
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^ {
-        //send a post request
-        //code adapted from http://codewithchris.com/tutorial-how-to-use-ios-nsurlconnection-by-example/
-        
-        //create and format post request to be send to api server
-        NSData *postData = [postString dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
-        NSString *postLength = [NSString stringWithFormat:@"%lu" , (unsigned long)[postData length]];
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", apiUrl, fileName]];
-        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-        [request setURL:url];
-        [request setHTTPMethod:@"POST"];
-        [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-        [request setHTTPBody:postData];
-        [request setTimeoutInterval:5.0];
-        
-        //Send Post Request
-        NSURLSession *session = [NSURLSession sharedSession];
-        [[session dataTaskWithRequest:request
-                    completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                        
-                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                            if(animated){
-                                [spinner stopAnimating];
-                                [overlay removeFromSuperview];
-                            }
-                        }];
-                        
-                        if(error){
-                            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                                [self showAlertWithMessage:@"Server Error"];
-                            }];
-                            return;
-                        }
-                        
-                        NSError *JSONerror = nil;
-                        id object = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
-                        
-                        if(JSONerror){
-                            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                                [self showAlertWithMessage:@"Server Error"];
-                            }];
-                            return;
-                        }
-                        
-                        //run custom commands through block on post results
-                        iteratorBlock(object);
-                    }]
-         resume];
-    });
 }
 
 

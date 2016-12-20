@@ -20,6 +20,10 @@
     [self registerForKeyboardNotifications];
     [self configureLayout];
     [self autoLogin];
+    
+    NSString *path = [NSString stringWithFormat:@"%@/slide-paper.aif", [[NSBundle mainBundle] resourcePath]];
+    NSURL *soundUrl = [NSURL fileURLWithPath:path];
+    _audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:soundUrl error:nil];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -40,10 +44,12 @@
 
 //if option selected then autologin user
 - (void) autoLogin{
-    //to do
-    _emailTextField.text = @"shuaib@test.com";
-    _pwdTextField.text = @"test12";
-    //[self logInBtnClick:self];
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    if([[prefs objectForKey:@"autologin"] isEqualToString:@"yes"]){
+        _emailTextField.text = [prefs objectForKey:@"user"];
+        _pwdTextField.text = [prefs objectForKey:@"pass"];
+        [self logInBtnClick:self];
+    }
 }
 
 #pragma mark IBAction Functions
@@ -73,9 +79,16 @@
                              completion:^(FIRUser *user, NSError *error) {
                                  if(error)
                                      [self showAlertWithMessage:@"Invalid credidentials"];
-                                 else
+                                 else {
+                                     if(_autoSignInSwitch.on == YES){
+                                         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+                                         [prefs setObject:_emailTextField.text forKey:@"user"];
+                                         [prefs setObject:_pwdTextField.text forKey:@"pass"];
+                                         [prefs setObject:@"yes" forKey:@"autologin"];
+                                     }
                                      [self performSegueWithIdentifier:@"loggedIn" sender:self];
-                                 
+                                 }
+                                 [_audioPlayer play];
                                  [spinner stopAnimating];
                                  [overlay removeFromSuperview];
                              }
@@ -83,7 +96,7 @@
 }
 
 - (IBAction)connectFbBtnClick:(id)sender {
-    //to do
+    
 }
 
 -(IBAction)goBackToLogin:(UIStoryboardSegue *)segue {

@@ -24,9 +24,12 @@
     _ref = [[FIRDatabase database] reference];
     _navItem.title = _jobName;
     [self loadData];
+    
+    //A lot of 180 rotation in this so that when messages are sent, it starts from below not top
     _tableView.transform = CGAffineTransformMakeRotation(-M_PI);
 }
 
+//Grab existing messages and sort them by their timestamp (in inverse because we're gonna access in reverse order)
 -(void) loadData{
     FIRDatabaseReference *messages = [[[_ref child:@"conversations"] child:_convoID] child:@"messages"];
     
@@ -106,6 +109,24 @@
     }
 }
 
+//sends a message to the other user
+- (IBAction)sendMessage:(id)sender {
+    NSString *messageText = _message.text;
+    if([messageText length] > 0){
+        FIRDatabaseReference *convoRef = [[[[_ref child:@"conversations"] child:_convoID] child:@"messages"] childByAutoId];
+        FIRUser *user = [FIRAuth auth].currentUser;
+        NSDictionary *message = @{
+                                  @"message" : messageText,
+                                  @"sender" : user.uid,
+                                  @"timestamp" : [FIRServerValue timestamp],
+                                  };
+        
+        [convoRef setValue:message];
+        [self.view endEditing:YES];
+    }
+    _message.text = @"";
+}
+
 //sets active text field when user edits it
 - (void)textViewDidBeginEditing:(UITextView *)textView{
     _activeField = textView;
@@ -151,21 +172,5 @@
     _scrollView.scrollIndicatorInsets = contentInsets;
 }
 
-- (IBAction)sendMessage:(id)sender {
-    NSString *messageText = _message.text;
-    if([messageText length] > 0){
-        FIRDatabaseReference *convoRef = [[[[_ref child:@"conversations"] child:_convoID] child:@"messages"] childByAutoId];
-        FIRUser *user = [FIRAuth auth].currentUser;
-        NSDictionary *message = @{
-                                @"message" : messageText,
-                                @"sender" : user.uid,
-                                @"timestamp" : [FIRServerValue timestamp],
-                                };
-        
-        [convoRef setValue:message];
-        [self.view endEditing:YES];
-    }
-    _message.text = @"";
-}
 
 @end

@@ -66,7 +66,7 @@
     [self.view addSubview:overlay];
     [spinner startAnimating];
     
-    
+    //validation, login and play sound on login
     if(_emailTextField.text.length < 1 || _pwdTextField.text.length < 1)
         [self showAlertWithMessage:@"Both fields need to be filled in"];
     else

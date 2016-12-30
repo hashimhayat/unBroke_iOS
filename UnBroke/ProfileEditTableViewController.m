@@ -25,6 +25,7 @@
     [tempImageView setFrame:self.tableView.frame];
     self.tableView.backgroundView = tempImageView;
     
+    //default values for empty cells
     self.identifiers = @[@"First Name", @"Last Name", @"Age", @"Occupation", @"Bio"];
     self.defaultVal =  @[@"", @"", @"", @"", @""];
     
@@ -77,7 +78,7 @@
     }
 }
 
-
+//Save edits to database
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if ([[segue identifier] isEqualToString:@"save"]){
         
@@ -137,6 +138,7 @@
     }
 }
 
+//grabs profile data from Firebase
 -(void)loadDataFromServer{
     //create overlay
     UIView *overlay = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
@@ -163,6 +165,7 @@
         for (NSInteger i = 0; i < [self.tableView numberOfRowsInSection:0]; i++){
             if(i == 0){
                 profilePictureCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+                cell.image.layer.cornerRadius = 10;
                 //not implemented yet
             } else if (i == 1){
                 TypicalTableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];

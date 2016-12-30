@@ -19,7 +19,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    //default values for table entries
     self.identifiers = @[@"First Name", @"Last Name", @"Age", @"Occupation", @"Bio", @"Email", @"Password"];
     self.defaultVal =  @[@"", @"", @"", @"", @"", @"", @""];
     
@@ -67,6 +67,7 @@
     }
 }
 
+//grabs profile from Firebase
 -(void)loadDataFromServer{
     //create overlay
     UIView *overlay = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];

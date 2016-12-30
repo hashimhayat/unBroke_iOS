@@ -190,17 +190,17 @@
 		20DBFF121DE38CA7002E0675 /* UnBroke */ = {
 			isa = PBXGroup;
 			children = (
-				209E7D971DFECDCA000C4031 /* slides */,
 				20DBFF1F1DE38CA7002E0675 /* Assets.xcassets */,
 				20E3B99D1DF63A2900F7DBD0 /* Authentication */,
 				20E3B9B01DF7613D00F7DBD0 /* Dashboard */,
+				20E26A521DEF8BC20026A353 /* My Jobs */,
 				20E26A4E1DEF8B870026A353 /* Job (Search) */,
 				20DBFF1C1DE38CA7002E0675 /* Main.storyboard */,
 				20E26A4C1DEF8B5D0026A353 /* Messages */,
-				20E26A521DEF8BC20026A353 /* My Jobs */,
 				201B7E5A1DFA2697008C12B7 /* Others */,
 				20E26A4B1DEF8B370026A353 /* Profile View */,
 				20DBFF131DE38CA7002E0675 /* Supporting Files */,
+				209E7D971DFECDCA000C4031 /* slides */,
 			);
 			path = UnBroke;
 			sourceTree = "<group>";
@@ -208,6 +208,18 @@
 		20DBFF131DE38CA7002E0675 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				20DE371F1DFBDD510001ADAF /* JobDetailsTableViewCell.h */,
+				20DE37201DFBDD510001ADAF /* JobDetailsTableViewCell.m */,
+				206161481E068E5200010223 /* matchedApplicantNameTableViewCell.h */,
+				206161491E068E5200010223 /* matchedApplicantNameTableViewCell.m */,
+				201919251DFE09FC0056216F /* JobResponseTableViewCell.h */,
+				201919261DFE09FC0056216F /* JobResponseTableViewCell.m */,
+				20A4FC221E09704000CF5FAD /* LatestJobUpdatesTableViewCell.h */,
+				20A4FC231E09704500CF5FAD /* LatestJobUpdatesTableViewCell.m */,
+				20A4FC251E0970A800CF5FAD /* LatestThreeJobsTableViewCell.h */,
+				20A4FC261E0970A800CF5FAD /* LatestThreeJobsTableViewCell.m */,
+				2019191F1DFDF9940056216F /* NotificationsTableViewCell.h */,
+				201919201DFDF9940056216F /* NotificationsTableViewCell.m */,
 				20E3B9B11DF8D6F600F7DBD0 /* titleTableViewCell.h */,
 				20E3B9B21DF8D6F600F7DBD0 /* titleTableViewCell.m */,
 				207327E61DF5425B006B6A47 /* ThreadEntry.h */,
@@ -223,8 +235,6 @@
 				207327EF1DF558A0006B6A47 /* TypicalTableViewCell.h */,
 				207327F01DF558A0006B6A47 /* TypicalTableViewCell.m */,
 				20DBFF141DE38CA7002E0675 /* main.m */,
-				202686E51DFE7B880030A46B /* ApplicantNameTableViewCell.h */,
-				202686E61DFE7B880030A46B /* ApplicantNameTableViewCell.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -260,8 +270,6 @@
 				20E26A3D1DEE79EB0026A353 /* JobsFilterViewController.m */,
 				20DE371C1DFBD6270001ADAF /* JobsSingleViewController.h */,
 				20DE371D1DFBD6270001ADAF /* JobsSingleViewController.m */,
-				20DE371F1DFBDD510001ADAF /* JobDetailsTableViewCell.h */,
-				20DE37201DFBDD510001ADAF /* JobDetailsTableViewCell.m */,
 			);
 			name = "Job (Search)";
 			sourceTree = "<group>";
@@ -269,16 +277,14 @@
 		20E26A521DEF8BC20026A353 /* My Jobs */ = {
 			isa = PBXGroup;
 			children = (
+				202686E51DFE7B880030A46B /* ApplicantNameTableViewCell.h */,
+				202686E61DFE7B880030A46B /* ApplicantNameTableViewCell.m */,
 				20E26A4F1DEF8BBB0026A353 /* MyJobsViewController.h */,
 				20E26A501DEF8BBB0026A353 /* MyJobsViewController.m */,
 				20E26A3F1DEE845A0026A353 /* JobsPostViewController.h */,
 				20E26A401DEE845A0026A353 /* JobsPostViewController.m */,
 				20DE37221DFC45CB0001ADAF /* MyJobsSingleViewController.h */,
 				20DE37231DFC45CB0001ADAF /* MyJobsSingleViewController.m */,
-				206161481E068E5200010223 /* matchedApplicantNameTableViewCell.h */,
-				206161491E068E5200010223 /* matchedApplicantNameTableViewCell.m */,
-				201919251DFE09FC0056216F /* JobResponseTableViewCell.h */,
-				201919261DFE09FC0056216F /* JobResponseTableViewCell.m */,
 			);
 			name = "My Jobs";
 			sourceTree = "<group>";
@@ -299,12 +305,6 @@
 			children = (
 				20E3B9AD1DF7613600F7DBD0 /* Dashboard.h */,
 				20E3B9AE1DF7613600F7DBD0 /* Dashboard.m */,
-				2019191F1DFDF9940056216F /* NotificationsTableViewCell.h */,
-				201919201DFDF9940056216F /* NotificationsTableViewCell.m */,
-				20A4FC221E09704000CF5FAD /* LatestJobUpdatesTableViewCell.h */,
-				20A4FC231E09704500CF5FAD /* LatestJobUpdatesTableViewCell.m */,
-				20A4FC251E0970A800CF5FAD /* LatestThreeJobsTableViewCell.h */,
-				20A4FC261E0970A800CF5FAD /* LatestThreeJobsTableViewCell.m */,
 			);
 			name = Dashboard;
 			sourceTree = "<group>";

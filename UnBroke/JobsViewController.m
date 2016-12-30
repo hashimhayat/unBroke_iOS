@@ -53,6 +53,7 @@
     _data = [[NSMutableArray alloc] init];
     _originalData = [[NSMutableArray alloc] init];
     
+    //load and sort all jobs created by others into an array
     FIRUser *user = [FIRAuth auth].currentUser;
     FIRDatabaseReference *jobData = [_ref child:@"jobs"];
     [jobData observeEventType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
@@ -150,13 +151,49 @@
     [self performSegueWithIdentifier:@"showJob" sender:self];
 }
 
+//resets filters and thus table to default
 -(IBAction)goBackToJobs:(UIStoryboardSegue *)segue {
     _filterCategory = @"";
     [self loadDataFirebase];
 }
 
+//filters according to input
 -(IBAction)filterAndGoBackToJobs:(UIStoryboardSegue *)segue {
     [self loadDataFirebase];
+}
+
+//handles search when text in search bar changes
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
+    [_data removeAllObjects];
+    if (searchText.length == 0) {
+        _data = [_originalData mutableCopy];
+    } else {
+        _data = [[NSMutableArray alloc] init];
+        for (NSDictionary *job in _originalData) {
+            if ([[[job objectForKey:@"name"] lowercaseString] containsString:[searchText lowercaseString]] ||
+                [[[job objectForKey:@"category"] lowercaseString] containsString:[searchText lowercaseString]] ||
+                [[[job objectForKey:@"salary"] lowercaseString] containsString:[searchText lowercaseString]]) {
+                
+                [_data addObject:job];
+            }
+        }
+    }
+    
+    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+}
+
+-(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+    [_data removeAllObjects];
+    _data = [_originalData mutableCopy];
+    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if ([[segue identifier] isEqualToString:@"showJob"]){
+        NSIndexPath *indexPath = [_tableView indexPathForSelectedRow];
+        JobsSingleViewController *destViewController = segue.destinationViewController;
+        destViewController.job = [_data objectAtIndex:indexPath.row];
+    }
 }
 
 /*
@@ -182,32 +219,6 @@
     
     [alert addAction:ok];
     [self presentViewController:alert animated:YES completion:nil];
-}
-
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
-    [_data removeAllObjects];
-    if (searchText.length == 0) {
-        _data = [_originalData mutableCopy];
-    } else {
-        _data = [[NSMutableArray alloc] init];
-        for (NSDictionary *job in _originalData) {
-            if ([[[job objectForKey:@"name"] lowercaseString] containsString:[searchText lowercaseString]] ||
-                [[[job objectForKey:@"category"] lowercaseString] containsString:[searchText lowercaseString]] ||
-                [[[job objectForKey:@"salary"] lowercaseString] containsString:[searchText lowercaseString]]) {
-                
-                [_data addObject:job];
-            }
-        }
-    }
-    
-    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
-}
-
-
--(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
-    [_data removeAllObjects];
-    _data = [_originalData mutableCopy];
-    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
 }
 
 -(NSString *) getCategoryImageName:(NSString *)category {
@@ -249,15 +260,6 @@
         retVal = @"teaching";
     }
     return retVal;
-}
-
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    if ([[segue identifier] isEqualToString:@"showJob"]){
-        NSIndexPath *indexPath = [_tableView indexPathForSelectedRow];
-        JobsSingleViewController *destViewController = segue.destinationViewController;
-        destViewController.job = [_data objectAtIndex:indexPath.row];
-    }
 }
 
 @end

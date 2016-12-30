@@ -15,15 +15,14 @@
 @property (strong, nonatomic) IBOutlet UITableView *postingsTbl;
 @property (strong, nonatomic) IBOutlet UITableView *updatesTbl;
 
+@property BOOL showPosting;
+@property BOOL showNotifications;
+
 @property NSMutableArray *jobs;
 @property NSMutableArray *myJobs;
 @property NSMutableArray *updates;
 
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
-
 @property (strong, nonatomic) FIRDatabaseReference *ref;
-
-@property BOOL showPosting;
-@property BOOL showNotifications;
 
 @end

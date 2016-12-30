@@ -8,13 +8,11 @@
 
 #import "ThreadEntry.h"
 
-extern NSInteger cornerRadius;
-
 @implementation ThreadEntry
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    _image.layer.cornerRadius = cornerRadius;
+    _image.layer.cornerRadius = 10;
     _image.clipsToBounds = YES;
     // Initialization code
 }

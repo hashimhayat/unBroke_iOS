@@ -10,11 +10,9 @@
 #import "LatestThreeJobsTableViewCell.h"
 #import "LatestJobUpdatesTableViewCell.h"
 
-
 @import Firebase;
 
 @interface Dashboard ()
-
 @end
 
 @implementation Dashboard
@@ -23,17 +21,28 @@
     [super viewDidLoad];
     _ref = [[FIRDatabase database] reference];
     
+    //add rounded corners to table
     _postingsTbl.layer.cornerRadius = 7;
     _updatesTbl.layer.cornerRadius = 7;
     
+    //expand both table at the beginning
     _showPosting = YES;
     _showNotifications = YES;
     
+    //load data
     [self loadPostings];
 }
 
+-(void) viewDidAppear:(BOOL)animated{
+    [self loadPostings];
+}
 
-//to allow for scrolling
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+//Manually calculated position and size of tables because autolayout wasn't working well with them in landscape
 - (void) setTableDimensions{
     CGRect framePostings = _postingsTbl.frame;
     CGRect frameUpdates = _updatesTbl.frame;
@@ -62,11 +71,7 @@
      ];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
+//Grab all jobs that others have posted from Firebase server
 - (void) loadPostings{
     FIRUser *user = [FIRAuth auth].currentUser;
     FIRDatabaseReference *jobData = [_ref child:@"jobs"];
@@ -98,6 +103,7 @@
         
         _postingsTbl.backgroundView = [[UIView alloc] init];
         if(_jobs.count == 0){
+            //generate information message if no jobs available
             UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
             
             messageLabel.text = @"No data is currently available";
@@ -113,8 +119,8 @@
     }];
 }
 
+//Grab all updates about jobs that user has created
 -(void) loadUpdates{
-    _updates = [[NSMutableArray alloc] init];
     FIRUser *user = [FIRAuth auth].currentUser;
     FIRDatabaseReference *jobData = [_ref child:@"jobs"];
     [jobData observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
@@ -141,7 +147,7 @@
             }];
             
             _myJobs = [sortedByDate mutableCopy];
-            
+            _updates = [[NSMutableArray alloc] init];
             for(NSDictionary *job in _myJobs){
                 if([[job objectForKey:@"matched"] isEqualToString:@"yes"]){
                     [_updates addObject:@{
@@ -157,7 +163,7 @@
                                               }];
                     } else {
                         [_updates addObject:@{
-                                              @"message": [[NSString alloc] initWithFormat:@"%lu possible candidates for job %@", applicants.count, job[@"name"]],
+                                              @"message": [[NSString alloc] initWithFormat:@"%lu possible candidates for job %@", applicants.count-1, job[@"name"]],
                                               @"status":@"good",
                                               }];
                     }
@@ -166,9 +172,10 @@
             
             
             _updatesTbl.backgroundView = [[UIView alloc] init];
+            
             if(_updates.count == 0){
                 UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
-                
+                //Generate information message if user hasn't created any jobs yet
                 messageLabel.text = @"No data is currently available";
                 messageLabel.textColor = [UIColor darkGrayColor];
                 messageLabel.numberOfLines = 0;
@@ -179,6 +186,16 @@
             }
             
             [_updatesTbl reloadData];
+        } else {
+            UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+            //Generate information message if user hasn't created any jobs yet
+            messageLabel.text = @"No data is currently available";
+            messageLabel.textColor = [UIColor darkGrayColor];
+            messageLabel.numberOfLines = 0;
+            messageLabel.textAlignment = NSTextAlignmentCenter;
+            [messageLabel sizeToFit];
+            
+            _updatesTbl.backgroundView = messageLabel;
         }
         [self setTableDimensions];
     }];

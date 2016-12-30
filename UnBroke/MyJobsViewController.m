@@ -32,6 +32,7 @@
  *
  */
 
+//grab data from server and load it into table
 - (void) loadDataFirebase {
     //create overlay
     UIView *overlay = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
@@ -151,7 +152,8 @@
     }
 }
 
--(IBAction)goBackToMyJobs:(UIStoryboardSegue *)segue {}
+-(IBAction)goBackToMyJobs:(UIStoryboardSegue *)segue {
+}
 
 /*
  *
@@ -178,6 +180,7 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
+//handles when text in search bar changes
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
     [_data removeAllObjects];
     if (searchText.length == 0) {
@@ -197,12 +200,14 @@
     [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
 }
 
+//brings table back to default
 -(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
     [_data removeAllObjects];
     _data = [_originalData mutableCopy];
     [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
 }
 
+//returns image file name according to category
 -(NSString *) getCategoryImageName:(NSString *)category {
     NSString *retVal = @"other";
     

@@ -22,6 +22,7 @@
     [self loadData];
 }
 
+//grab all existing conversations from server
 -(void) loadData{
     //create overlay
     UIView *overlay = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
@@ -41,6 +42,7 @@
     FIRUser *user = [FIRAuth auth].currentUser;
     FIRDatabaseReference *conversations = [_ref child:@"conversations"];
     
+    //load existing conversations if existing
     [conversations observeEventType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
         _data = [[NSMutableArray alloc] init];
         for (FIRDataSnapshot *childSnap in snapshot.children) {
@@ -94,9 +96,9 @@
         cell = [[ThreadEntry alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier: identifier];
     
     FIRUser *user = [FIRAuth auth].currentUser;
-    if([user.uid isEqualToString:_data[indexPath.row][@"applicant"]])
+    if(![user.uid isEqualToString:_data[indexPath.row][@"applicant"]])
         cell.name.text = _data[indexPath.row][@"applicantName"];
-    else if ([user.uid isEqualToString:_data[indexPath.row][@"creator"]])
+    else
         cell.name.text = _data[indexPath.row][@"creatorName"];
     
     cell.lastText.text = _data[indexPath.row][@"jobName"];

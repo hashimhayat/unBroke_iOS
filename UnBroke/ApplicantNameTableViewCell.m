@@ -23,6 +23,8 @@
 
     // Configure the view for the selected state
 }
+
+//accept an applicant for a position
 - (IBAction)accept:(id)sender {
     FIRUser *user = [FIRAuth auth].currentUser;
     FIRDatabaseReference *jobRef = [[_ref child:@"jobs"] child:_jobID];
@@ -46,6 +48,8 @@
     [convoRef setValue:convo];
 }
 
+
+//deny an applicant for a position
 - (IBAction)reject:(id)sender {
     FIRDatabaseReference *jobRef = [[_ref child:@"jobs"] child:_jobID];
     FIRDatabaseReference *applicantRef = [jobRef child:@"applicants"];

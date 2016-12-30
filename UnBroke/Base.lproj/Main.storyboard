@@ -2726,12 +2726,6 @@
                                                 <segue destination="xaY-Nw-Dt1" kind="unwind" unwindAction="goBackToMessages:" id="YIo-Iw-C9f"/>
                                             </connections>
                                         </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" image="info" id="5O7-GP-4dr">
-                                            <color key="tintColor" red="0.20000000000000001" green="0.28627450980000002" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
-                                            <connections>
-                                                <segue destination="VJe-wp-JyQ" kind="showDetail" id="OGH-3s-kpt"/>
-                                            </connections>
-                                        </barButtonItem>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
@@ -3275,52 +3269,6 @@
             </objects>
             <point key="canvasLocation" x="2844" y="5990"/>
         </scene>
-        <!--Profile View-->
-        <scene sceneID="5Pw-a2-apb">
-            <objects>
-                <viewController title="Profile View" id="VJe-wp-JyQ" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="lUu-W1-d4T"/>
-                        <viewControllerLayoutGuide type="bottom" id="bGo-SD-vPT"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="GVx-QF-QFc">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="Og6-OD-Np1">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                            </imageView>
-                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Y5-dz-Oca">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="74"/>
-                                <items>
-                                    <navigationItem title="TBA" prompt=" " id="BvM-CE-OVI">
-                                        <barButtonItem key="leftBarButtonItem" image="back" id="nzU-JQ-9oL">
-                                            <color key="tintColor" red="0.20000000000000001" green="0.28627450980000002" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
-                                            <connections>
-                                                <segue destination="9uV-52-cmr" kind="unwind" unwindAction="goBackToMessages:" id="cBB-Hj-p1J"/>
-                                            </connections>
-                                        </barButtonItem>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="0Y5-dz-Oca" firstAttribute="leading" secondItem="GVx-QF-QFc" secondAttribute="leading" id="Gmy-TZ-DjL"/>
-                            <constraint firstAttribute="bottom" secondItem="Og6-OD-Np1" secondAttribute="bottom" id="ISF-oF-GH4"/>
-                            <constraint firstAttribute="trailing" secondItem="Og6-OD-Np1" secondAttribute="trailing" id="Ih5-e6-iHH"/>
-                            <constraint firstAttribute="trailing" secondItem="0Y5-dz-Oca" secondAttribute="trailing" id="Mlq-8Q-xue"/>
-                            <constraint firstItem="Og6-OD-Np1" firstAttribute="top" secondItem="GVx-QF-QFc" secondAttribute="top" id="PV5-x3-61t"/>
-                            <constraint firstItem="0Y5-dz-Oca" firstAttribute="top" secondItem="GVx-QF-QFc" secondAttribute="top" id="cvD-jO-1aS"/>
-                            <constraint firstItem="Og6-OD-Np1" firstAttribute="leading" secondItem="GVx-QF-QFc" secondAttribute="leading" id="fXW-Wb-Uc2"/>
-                        </constraints>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="EPf-Vt-LXc" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="9uV-52-cmr" userLabel="Exit" sceneMemberID="exit"/>
-            </objects>
-            <point key="canvasLocation" x="3921" y="4818"/>
-        </scene>
     </scenes>
     <resources>
         <image name="add" width="25" height="25"/>
@@ -3330,7 +3278,6 @@
         <image name="check" width="25" height="25"/>
         <image name="dashboard" width="25" height="25"/>
         <image name="downarrow" width="25" height="25"/>
-        <image name="info" width="25" height="25"/>
         <image name="logo" width="669" height="670"/>
         <image name="message" width="25" height="25"/>
         <image name="myjob" width="25" height="25"/>

@@ -35,11 +35,21 @@
     _show7 = false;
     
     _categoryTextField.text = @"Airline";
+    
+    //ensures infinite scrolling
     [_categoryPicker selectRow:12504 inComponent:0 animated:NO];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+}
+
+//ensure that job is properly filtered (passes it back to parent controller)
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if ([[segue identifier] isEqualToString:@"filter"]){
+        JobsViewController *destViewController = segue.destinationViewController;
+        destViewController.filterCategory = _categoryTextField.text;
+    }
 }
 
 /*
@@ -83,6 +93,7 @@
     return UITableViewAutomaticDimension;
 }
 
+//handles drop down animtation depending on what was clicked
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     switch(indexPath.row){
         case 0:
@@ -220,6 +231,7 @@
         _maxDistanceTextField.text = [NSString stringWithFormat:@"None"];
 }
 
+//Generates friendly popup message to user
 -(void) showAlertWithMessage:(NSString *)msg {
     UIAlertController * alert=   [UIAlertController
                                   alertControllerWithTitle:nil
@@ -235,14 +247,6 @@
     
     [alert addAction:ok];
     [self presentViewController:alert animated:YES completion:nil];
-}
-
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    if ([[segue identifier] isEqualToString:@"filter"]){
-        JobsViewController *destViewController = segue.destinationViewController;
-        destViewController.filterCategory = _categoryTextField.text;
-    }
 }
 
 @end

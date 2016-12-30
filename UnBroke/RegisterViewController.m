@@ -27,13 +27,6 @@
     [super didReceiveMemoryWarning];
 }
 
-NSString *apiUrl;
-NSInteger cornerRadius;
-NSInteger jobID;
-NSInteger userID;
-
-#pragma mark Program Functions
-
 //Adds rounded corners to text fields and buttons
 - (void) configureLayout{
     NSInteger cornerRadius = 7;
@@ -43,8 +36,6 @@ NSInteger userID;
     _goBackBtn.layer.cornerRadius = cornerRadius;
     _signUpBtn.layer.cornerRadius = cornerRadius;
 }
-
-#pragma mark IBAction Functions
 
 //Sign up function. Validates input data and registers user in Firebase database
 - (IBAction)signUpBtnClick:(id)sender {
@@ -95,9 +86,6 @@ NSInteger userID;
 - (IBAction)backBtnClick:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
 }
-
-
-#pragma mark Helper Functions
 
 //Animates and shows a custom alert message
 -(void) showAlertWithMessage:(NSString *)msg {

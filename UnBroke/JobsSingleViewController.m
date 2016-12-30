@@ -29,6 +29,7 @@
     FIRUser *user = [FIRAuth auth].currentUser;
     FIRDatabaseReference *applicantRef = [[[_ref child:@"jobs"] child:_job[@"key"]] child:@"applicants"];
     
+    //check if user has already applied to this job
     [applicantRef observeEventType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
         _applied = NO;
         NSArray *applicants = snapshot.value;
@@ -44,6 +45,7 @@
     FIRDatabaseReference *matchedRef = [[[_ref child:@"jobs"] child:_job[@"key"]] child:@"matched"];
     FIRDatabaseReference *matchedUserRef = [[[_ref child:@"jobs"] child:_job[@"key"]] child:@"matchedUserID"];
     
+    //check if user has applied to job plus got accepted to it
     [matchedRef observeEventType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
         if([(NSString *)snapshot.value isEqualToString:@"yes"]){
             [matchedUserRef observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
@@ -60,6 +62,7 @@
     [super didReceiveMemoryWarning];
 }
 
+//Applies to a job
 - (IBAction)apply:(id)sender {
     if(_accepted == NO){
         FIRUser *user = [FIRAuth auth].currentUser;
@@ -71,6 +74,14 @@
             [applicants addObject:user.uid];
             [jobRef updateChildValues:@{@"applicants": applicants}];
         }];
+    }
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if ([[segue identifier] isEqualToString:@"message"]){
+        UINavigationController *destViewController = segue.destinationViewController;
+        Dashboard *targetController = [destViewController viewControllers][0];
+        [targetController.tabBarController setSelectedIndex:3];
     }
 }
 
@@ -91,6 +102,7 @@
     return 100.0f;
 }
 
+//Loads content into cells
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.row == 0){
         NSString *cellIdentifier = @"jobEntry";
@@ -183,6 +195,7 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
+//outputs name of image needed for a certain category
 -(NSString *) getCategoryImageName:(NSString *)category {
     NSString *retVal = @"other";
     
@@ -222,14 +235,6 @@
         retVal = @"teaching";
     }
     return retVal;
-}
-
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    if ([[segue identifier] isEqualToString:@"message"]){
-        UINavigationController *destViewController = segue.destinationViewController;
-        Dashboard *targetController = [destViewController viewControllers][0];
-        [targetController.tabBarController setSelectedIndex:3];
-    }
 }
 
 @end

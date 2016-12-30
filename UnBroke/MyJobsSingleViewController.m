@@ -32,6 +32,8 @@
     _jobApplicants = [[NSMutableArray alloc] init];
     
     FIRDatabaseReference *applicantRef = [[[_ref child:@"jobs"] child:_job[@"key"]] child:@"applicants"];
+    
+    //retrieve list of applicants for that job
     [applicantRef observeEventType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
         NSArray *applicants = snapshot.value;
         _jobApplicants = [applicants mutableCopy];
@@ -41,6 +43,7 @@
     FIRDatabaseReference *matchedRef = [[[_ref child:@"jobs"] child:_job[@"key"]] child:@"matched"];
     FIRDatabaseReference *matchedUserRef = [[[_ref child:@"jobs"] child:_job[@"key"]] child:@"matchedUserID"];
     
+    //checks if job search/match is over
     [matchedRef observeEventType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
         if([(NSString *)snapshot.value isEqualToString:@"yes"]){
             _matchFound = YES;
@@ -83,6 +86,7 @@
     return 10.0f;
 }
 
+//Generates table cells depending on row position
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.row == 0){
         NSString *cellIdentifier = @"jobEntry";
@@ -244,6 +248,15 @@
     }
 }
 
+//programatic segue because we're not moving directly to messages tab but to nav controller first
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if ([[segue identifier] isEqualToString:@"message"]){
+        UINavigationController *destViewController = segue.destinationViewController;
+        Dashboard *targetController = [destViewController viewControllers][0];
+        [targetController.tabBarController setSelectedIndex:3];
+    }
+}
+
 /*
  *
  * Custom helpers
@@ -270,6 +283,7 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
+//returns name of image associate with category
 -(NSString *) getCategoryImageName:(NSString *)category {
     NSString *retVal = @"other";
     
@@ -310,13 +324,4 @@
     }
     return retVal;
 }
-
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    if ([[segue identifier] isEqualToString:@"message"]){
-        UINavigationController *destViewController = segue.destinationViewController;
-        Dashboard *targetController = [destViewController viewControllers][0];
-        [targetController.tabBarController setSelectedIndex:3];
-    }
-}
-
 @end

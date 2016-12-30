@@ -41,8 +41,7 @@
     [super didReceiveMemoryWarning];
 }
 
-#pragma mark Table methods
-
+//Please run app to see how everything is animated using change in height and boolean values
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.row == 2 && _showPicker == YES)
         return 124.0f;
@@ -143,6 +142,36 @@
     _categoryPickerText.text = _categories[row % _categories.count];
 }
 
+//saves data. if success, goes back to all user's job screen or cancel segue if validation fails
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender{
+    if ([identifier isEqualToString:@"save"]){
+        if(_jobNameTextField.text.length < 1 || _descriptionFieldEdit.text.length < 1 || _salaryText.text.length < 1){
+            [self showAlertWithMessage:@"All fields need to be filled in"];
+            return false;
+        }
+        
+        
+        FIRUser *user = [FIRAuth auth].currentUser;
+        FIRDatabaseReference *newEntry = [[_ref child:@"jobs"] childByAutoId];
+        NSMutableArray *applicants = [[NSMutableArray alloc] init];
+        [applicants addObject: @"null"];
+        NSDictionary *job = @{
+                              @"name" : _jobNameTextField.text,
+                              @"category" : _categoryPickerText.text,
+                              @"details" : _descriptionFieldEdit.text,
+                              @"salary" : _salaryText.text,
+                              @"owner" : user.uid,
+                              @"timestamp" : [FIRServerValue timestamp],
+                              @"key" : newEntry.key,
+                              @"applicants" : applicants,
+                              @"matched" : @"no",
+                              @"matchedUserID" : @"nil",
+                              };
+        [newEntry setValue:job];
+    }
+    return true;
+}
+
 /*
  *
  * Custom helpers
@@ -240,35 +269,6 @@
     UIEdgeInsets contentInsets = UIEdgeInsetsMake(64.0, 0.0, 0.0, 0.0);
     _tableView.contentInset = contentInsets;
     _tableView.scrollIndicatorInsets = contentInsets;
-}
-
-- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender{
-    if ([identifier isEqualToString:@"save"]){
-        if(_jobNameTextField.text.length < 1 || _descriptionFieldEdit.text.length < 1 || _salaryText.text.length < 1){
-            [self showAlertWithMessage:@"All fields need to be filled in"];
-            return false;
-        }
-        
-        
-        FIRUser *user = [FIRAuth auth].currentUser;
-        FIRDatabaseReference *newEntry = [[_ref child:@"jobs"] childByAutoId];
-        NSMutableArray *applicants = [[NSMutableArray alloc] init];
-        [applicants addObject: @"null"];
-        NSDictionary *job = @{
-                              @"name" : _jobNameTextField.text,
-                              @"category" : _categoryPickerText.text,
-                              @"details" : _descriptionFieldEdit.text,
-                              @"salary" : _salaryText.text,
-                              @"owner" : user.uid,
-                              @"timestamp" : [FIRServerValue timestamp],
-                              @"key" : newEntry.key,
-                              @"applicants" : applicants,
-                              @"matched" : @"no",
-                              @"matchedUserID" : @"nil",
-        };
-        [newEntry setValue:job];
-    }
-    return true;
 }
 
 @end

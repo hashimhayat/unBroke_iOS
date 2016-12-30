@@ -13,6 +13,7 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     // Initialization code
+    _image.layer.cornerRadius = 10;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
